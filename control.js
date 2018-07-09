@@ -18,11 +18,11 @@
 	];
 	
 	const country_flag = [
-		"/flags/ussr.png",
-		"/flags/germany.png",
-		"/flags/britain.png",
-		"/flags/japan.png",
-		"/flags/usa.png"
+		"flags/ussr.png",
+		"flags/germany.png",
+		"flags/britain.png",
+		"flags/japan.png",
+		"flags/usa.png"
 	];
 	
 	const country_anthem = [
