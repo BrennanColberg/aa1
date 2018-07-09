@@ -26,11 +26,11 @@
 	];
 	
 	const country_anthem = [
-		new Audio("/anthems/"),
-		new Audio("/anthems/"),
-		new Audio("/anthems/"),
-		new Audio("/anthems/"),
-		new Audio("/anthems/")
+		"anthems/ussr.mp3",
+		"anthems/germany.mp3",
+		"anthems/britain.mp3",
+		"anthems/japan.mp3",
+		"anthems/usa.mp3"
 	];
 	
 	let title = undefined;
@@ -38,6 +38,7 @@
 	let flag = undefined;
 	let index = 0;
 	let count = 5;
+	let anthem = undefined;
 	
 	window.addEventListener("load", function() {
 		title = document.getElementById("title");
@@ -47,19 +48,16 @@
 		
 		nextButton.onclick = loadNext;
 		
-		for (let i = 0; i < country_anthem.length; i++) {
-			country_anthem[i].loop = true;
-		}
 		load();
 	});
 	
 	function load() {
 		title.innerHTML = country_name[index];
 		flag.src = country_flag[index];
-		for (let i = 0; i < country_anthem.length; i++) {
-			country_anthem[i].stop();
-		}
-		country_anthem[index].play();
+		if (anthem != undefined) anthem.pause();
+		anthem = new Audio(country_anthem[index]);
+		anthem.loop = true;
+		anthem.play();
 	}
 	
 	function loadNext() {
