@@ -1,0 +1,33 @@
+
+img {
+	height: 40vh;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	font-family: sans-serif;
+}
+
+h1 {
+	font-size: 80pt;
+}
+
+h2 {
+	text-decoration: none;
+	font-weight: none;
+}
+
+button {
+	border: 1px solid black;
+	font-size: 20pt;
+	margin-top: 5vh;
+	width: 30vw;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: monospace;
+}
