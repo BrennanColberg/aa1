@@ -20,6 +20,7 @@ h1 {
 h2 {
 	text-decoration: none;
 	font-weight: none;
+	margin: 20px;
 }
 
 button {
@@ -33,9 +34,5 @@ button {
 }
 
 audio {
-	display: none;
-}
-
-#timer {
 	display: none;
 }
