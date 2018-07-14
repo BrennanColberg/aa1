@@ -39,7 +39,7 @@
 		let nextButton = document.getElementById("next");
 		
 		title.style.display = "none";
-		timer.style.display = "none";
+//		timer.style.display = "none";
 		flag.style.display = "none";
 		nextButton.textContent = "Start";
 		nextButton.onclick = loadFirst;
@@ -48,7 +48,7 @@
 	function loadFirst() {
 		load();
 		title.style.display = "";
-		timer.style.display = "";
+//		timer.style.display = "";
 		flag.style.display = "";
 		this.textContent = "Next";
 		this.onclick = loadNext;
