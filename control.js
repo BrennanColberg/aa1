@@ -38,10 +38,21 @@
 		flag = document.getElementsByTagName("img")[0];
 		let nextButton = document.getElementById("next");
 		
-		nextButton.onclick = loadNext;
-		
-		load();
+		title.style.display = "none";
+		timer.style.display = "none";
+		flag.style.display = "none";
+		nextButton.textContent = "Start";
+		nextButton.onclick = loadFirst;
 	});
+	
+	function loadFirst() {
+		load();
+		title.style.display = "";
+		timer.style.display = "";
+		flag.style.display = "";
+		this.textContent = "Next";
+		this.onclick = loadNext;
+	}
 	
 	function load() {
 		title.textContent = country_name[index];

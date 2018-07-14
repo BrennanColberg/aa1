@@ -33,5 +33,5 @@ button {
 }
 
 audio {
-	visibility: hidden;
+	display: none;
 }
