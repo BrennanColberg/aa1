@@ -2,11 +2,11 @@
 (function() {
 	
 	const country_name = [
-		"U.S.S.R.",
+		"USSR",
 		"Germany",
 		"Britain",
 		"Japan",
-		"U.S.A."
+		"USA"
 	];
 	
 	const country_color = [
@@ -23,14 +23,6 @@
 		"flags/britain.png",
 		"flags/japan.png",
 		"flags/usa.png"
-	];
-	
-	const country_anthem = [
-		"anthems/ussr.mp3",
-		"anthems/germany.mp3",
-		"anthems/britain.mp3",
-		"anthems/japan.mp3",
-		"anthems/usa.mp3"
 	];
 	
 	let title = undefined;
@@ -52,11 +44,11 @@
 	});
 	
 	function load() {
-		title.innerHTML = country_name[index];
+		title.textContent = country_name[index];
 		flag.src = country_flag[index];
 		if (anthem != undefined) anthem.pause();
-		anthem = new Audio(country_anthem[index]);
-		anthem.loop = true;
+		anthem = document.getElementsByTagName("audio")[index];
+		anthem.currentTime = 0;
 		anthem.play();
 	}
 	

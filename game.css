@@ -31,3 +31,7 @@ button {
 	margin-right: auto;
 	font-family: monospace;
 }
+
+audio {
+	visibility: hidden;
+}
