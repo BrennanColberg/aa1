@@ -37,7 +37,8 @@
 	let index = 0;
 	let count = 5;
 	let anthem = undefined;
-	let elapsedTime = [];
+//	let elapsedTime = [];
+	let currentTime = undefined;
 	
 	window.addEventListener("load", function() {
 		hide($("title"));
@@ -45,56 +46,60 @@
 		hide($("flag"));
 		hide($("back"));
 		$("next").textContent = "Start";
-		$("next").onclick = loadFirst;
-		$("back").onclick = loadLast;
+		$("next").onclick = start;
+		$("back").onclick = back;
 		document.addEventListener("keydown", key);
 	});
 	
-	function loadFirst() {
+	function start() {
 		show($("title"));
 		show($("timer"));
 		show($("flag"));
 		show($("back"));
-		load();
+		refresh();
 		this.textContent = "Next";
-		this.onclick = loadNext;
-		setInterval(calcTime, MEASURED_TIME_INTERVAL);
+		this.onclick = next;
+		setInterval(updateTime, MEASURED_TIME_INTERVAL);
 	}
 	
-	function load() {
+	function refresh() {
 		$("title").textContent = country_name[index];
 		$("flag").src = country_flag[index];
 		if (anthem != undefined) anthem.pause();
 		anthem = document.getElementsByTagName("audio")[index];
 		anthem.currentTime = 0;
 		anthem.play();
+		resetTime();
 	}
 	
-	function loadNext() {
+	function next() {
 		index++;
 		if (index >= count) {
 			index = 0;
 		}
-		load();
+		refresh();
  	}
 	
-	function loadLast() {
+	function back() {
 		index--;
 		if (index < 0) {
 			index = count - 1;
 		}
-		load();
+		refresh();
  	}
 	
 	function key(event) {
-		if (event.keyCode == 32) loadNext();
-		else if (event.keyCode == 13) loadLast();
+		if (event.keyCode == 32) next();
+		else if (event.keyCode == 13) back();
 	}
 	
-	function calcTime() {
-		if (!elapsedTime[index]) elapsedTime[index] = 0;
-		elapsedTime[index] += MEASURED_TIME_INTERVAL;
-		$("timer").textContent = timeString(elapsedTime[index]);
+	function resetTime() {
+		currentTime = 0;
+	}
+	
+	function updateTime() {
+		currentTime += MEASURED_TIME_INTERVAL;
+		$("timer").textContent = timeString(currentTime);
 	}
 	
 	function timeString(time) {
