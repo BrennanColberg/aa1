@@ -43,14 +43,17 @@
 		hide($("title"));
 		hide($("timer"));
 		hide($("flag"));
+		hide($("back"));
 		$("next").textContent = "Start";
 		$("next").onclick = loadFirst;
+		$("back").onclick = loadLast;
 	});
 	
 	function loadFirst() {
 		show($("title"));
 		show($("timer"));
 		show($("flag"));
+		show($("back"));
 		load();
 		this.textContent = "Next";
 		this.onclick = loadNext;
