@@ -30,9 +30,9 @@ function ajaxPOST(url, onSuccess) { // pass args as name, value, name, value... 
 	   .catch(function(e){console.log(e);});
 }
 function wrap(number, min, max) {
-	let range = max - min - 1;
-	while (number > max) { number -= (max - min - 1); }
-	while (number < min) { number += (max - min - 1); }
+	let range = max - min + 1;
+	while (number > max) { number -= (range); }
+	while (number < min) { number += (range); }
 	return number;
 }
 function clamp(number, min, max) {
