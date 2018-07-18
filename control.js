@@ -1,6 +1,13 @@
 "use strict";
 (function() {
 	
+	function $(id) { return document.getElementById(id); }
+	function qs(key) { return document.querySelector(key); }
+	function qsa(key) { return document.querySelector(key); }
+	function tag(tag) { return document.getElementsByTagName(tag); }
+	function hide(dom) { dom.classList.add("hidden"); }
+	function show(dom) { dom.classList.remove("hidden"); }
+	
 	const MEASURED_TIME_INTERVAL = 100;
 
 	const country_name = [
@@ -27,40 +34,32 @@
 		"flags/usa.png"
 	];
 	
-	let title = undefined;
-	let timer = undefined;
-	let flag = undefined;
 	let index = 0;
 	let count = 5;
 	let anthem = undefined;
 	let elapsedTime = [];
 	
 	window.addEventListener("load", function() {
-		title = document.getElementById("title");
-		timer = document.getElementById("timer");
-		flag = document.getElementsByTagName("img")[0];
-		let nextButton = document.getElementById("next");
-		
-		title.style.display = "none";
-		timer.style.display = "none";
-		flag.style.display = "none";
-		nextButton.textContent = "Start";
-		nextButton.onclick = loadFirst;
+		hide($("title"));
+		hide($("timer"));
+		hide($("flag"));
+		$("next").textContent = "Start";
+		$("next").onclick = loadFirst;
 	});
 	
 	function loadFirst() {
+		show($("title"));
+		show($("timer"));
+		show($("flag"));
 		load();
-		title.style.display = "";
-		timer.style.display = "";
-		flag.style.display = "";
 		this.textContent = "Next";
 		this.onclick = loadNext;
 		setInterval(calcTime, MEASURED_TIME_INTERVAL);
 	}
 	
 	function load() {
-		title.textContent = country_name[index];
-		flag.src = country_flag[index];
+		$("title").textContent = country_name[index];
+		$("flag").src = country_flag[index];
 		if (anthem != undefined) anthem.pause();
 		anthem = document.getElementsByTagName("audio")[index];
 		anthem.currentTime = 0;
@@ -86,7 +85,7 @@
 	function calcTime() {
 		if (!elapsedTime[index]) elapsedTime[index] = 0;
 		elapsedTime[index] += MEASURED_TIME_INTERVAL;
-		timer.textContent = timeString(elapsedTime[index]);
+		$("timer").textContent = timeString(elapsedTime[index]);
 	}
 	
 	function timeString(time) {

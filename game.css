@@ -36,3 +36,7 @@ button {
 audio {
 	display: none;
 }
+
+.hidden {
+	display: none;
+}
