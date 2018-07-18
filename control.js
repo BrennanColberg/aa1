@@ -73,20 +73,20 @@
 	}
 	
 	function next() {
-		index++;
-		if (index >= count) {
-			index = 0;
-		}
+		index = wrap(index + 1, 0, count - 1);
 		refresh();
  	}
 	
 	function back() {
-		index--;
-		if (index < 0) {
-			index = count - 1;
-		}
+		index = wrap(index - 1, 0, count - 1);
 		refresh();
  	}
+	
+	function wrap(number, min, max) {
+		while (number > max) { number -= (max - min); }
+		while (number < min) { number += (max - min); }
+		return number;
+	}
 	
 	function key(event) {
 		if (event.keyCode == 32) next();
