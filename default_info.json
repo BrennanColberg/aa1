@@ -40,5 +40,5 @@
 		"index" : 0,
 		"time" : 0
 	},
-	"MEASURED_TIME_INTERVAL": 100
+	"MEASURED_TIME_INTERVAL": 1000
 }

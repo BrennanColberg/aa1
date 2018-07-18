@@ -43,6 +43,7 @@
 		$("flag").src = data.countries[data.current.index].flag;
 		if (anthem) anthem.pause();
 		anthem = new Audio(data.countries[data.current.index].anthem);
+		anthem.loop = true;
 		anthem.play();
 		resetTime();
 	}
@@ -64,11 +65,18 @@
 	
 	function resetTime() {
 		data.current.time = 0;
+		printTime();
 	}
 	
 	function updateTime() {
 		data.current.time += data.MEASURED_TIME_INTERVAL;
-		$("timer").textContent = timeString(data.current.time);
+		data.countries[data.current.index].elapsed_time += data.MEASURED_TIME_INTERVAL;
+		printTime();
+	}
+	
+	function printTime() {
+		$("currentTime").textContent = timeString(data.current.time);
+		$("totalTime").textContent = timeString(data.countries[data.current.index].elapsed_time);
 	}
 	
 	function timeString(time) {
