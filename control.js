@@ -47,6 +47,7 @@
 		$("next").textContent = "Start";
 		$("next").onclick = loadFirst;
 		$("back").onclick = loadLast;
+		document.addEventListener("keydown", key);
 	});
 	
 	function loadFirst() {
@@ -84,6 +85,11 @@
 		}
 		load();
  	}
+	
+	function key(event) {
+		if (event.keyCode == 32) loadNext();
+		else if (event.keyCode == 13) loadLast();
+	}
 	
 	function calcTime() {
 		if (!elapsedTime[index]) elapsedTime[index] = 0;
