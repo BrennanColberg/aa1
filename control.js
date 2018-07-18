@@ -8,39 +8,11 @@
 	function hide(dom) { dom.classList.add("hidden"); }
 	function show(dom) { dom.classList.remove("hidden"); }
 	
-	const MEASURED_TIME_INTERVAL = 100;
-
-	const country_name = [
-		"USSR",
-		"Germany",
-		"Britain",
-		"Japan",
-		"USA"
-	];
-	
-	const country_color = [
-		"#590816",
-		"#000000",
-		"#d3d098",
-		"#e29e0b",
-		"#1a7705"
-	];
-	
-	const country_flag = [
-		"flags/ussr.png",
-		"flags/germany.png",
-		"flags/britain.png",
-		"flags/japan.png",
-		"flags/usa.png"
-	];
-	
-	let index = 0;
-	let count = 5;
+	let data = undefined;
 	let anthem = undefined;
-//	let elapsedTime = [];
-	let currentTime = undefined;
 	
 	window.addEventListener("load", function() {
+		ajaxGET("default_info.json", loadData);
 		hide($("title"));
 		hide($("timer"));
 		hide($("flag"));
@@ -51,6 +23,10 @@
 		document.addEventListener("keydown", key);
 	});
 	
+	function loadData(json) {
+		data = JSON.parse(json);
+	}
+	
 	function start() {
 		show($("title"));
 		show($("timer"));
@@ -59,34 +35,27 @@
 		refresh();
 		this.textContent = "Next";
 		this.onclick = next;
-		setInterval(updateTime, MEASURED_TIME_INTERVAL);
+		setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
 	}
 	
 	function refresh() {
-		$("title").textContent = country_name[index];
-		$("flag").src = country_flag[index];
-		if (anthem != undefined) anthem.pause();
-		anthem = document.getElementsByTagName("audio")[index];
-		anthem.currentTime = 0;
+		$("title").textContent = data.countries[data.current.index].name;
+		$("flag").src = data.countries[data.current.index].flag;
+		if (anthem) anthem.pause();
+		anthem = new Audio(data.countries[data.current.index].anthem);
 		anthem.play();
 		resetTime();
 	}
 	
 	function next() {
-		index = wrap(index + 1, 0, count - 1);
+		data.current.index = wrap(data.current.index + 1, 0, data.countries.length - 1);
 		refresh();
  	}
 	
 	function back() {
-		index = wrap(index - 1, 0, count - 1);
+		data.current.index = wrap(data.current.index - 1, 0, data.countries.length - 1);
 		refresh();
  	}
-	
-	function wrap(number, min, max) {
-		while (number > max) { number -= (max - min); }
-		while (number < min) { number += (max - min); }
-		return number;
-	}
 	
 	function key(event) {
 		if (event.keyCode == 32) next();
@@ -94,12 +63,12 @@
 	}
 	
 	function resetTime() {
-		currentTime = 0;
+		data.current.time = 0;
 	}
 	
 	function updateTime() {
-		currentTime += MEASURED_TIME_INTERVAL;
-		$("timer").textContent = timeString(currentTime);
+		data.current.time += data.MEASURED_TIME_INTERVAL;
+		$("timer").textContent = timeString(data.current.time);
 	}
 	
 	function timeString(time) {

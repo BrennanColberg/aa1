@@ -1,0 +1,44 @@
+{
+	"countries": [
+		{
+			"name" : "USSR",
+			"color" : "#590816",
+			"flag" : "flags/ussr.png",
+			"anthem": "anthems/ussr.mp3",
+			"elapsed_time" : 0
+		},
+		{
+			"name" : "Germany",
+			"color" : "#00000",
+			"flag" : "flags/germany.png",
+			"anthem" : "anthems/germany.mp3",
+			"elapsed_time" : 0
+		},
+		{
+			"name" : "Britain",
+			"color" : "#d3d098",
+			"flag" : "flags/britain.png",
+			"anthem" : "anthems/britain.mp3",
+			"elapsed_time" : 0
+		},
+		{
+			"name" : "Japan",
+			"color" : "#e29e0b",
+			"flag" : "flags/japan.png",
+			"anthem" : "anthems/japan.mp3",
+			"elapsed_time" : 0
+		},
+		{
+			"name" : "USA",
+			"color" : "#1a7705",
+			"flag" : "flags/usa.png",
+			"anthem" : "anthems/usa.mp3",
+			"elapsed_time" : 0
+		}
+	],
+	"current" : {
+		"index" : 0,
+		"time" : 0
+	},
+	"MEASURED_TIME_INTERVAL": 100
+}
