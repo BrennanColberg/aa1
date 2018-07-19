@@ -17,6 +17,7 @@
 		$("control").onclick = play;
 		$("next").onclick = next;
 		$("back").onclick = back;
+		$("save").onclick = saveData;
 		document.addEventListener("keydown", pressKey);
 	});
 	
@@ -26,10 +27,15 @@
 		show($("control"));
 	}
 	
+	function saveData(url) {
+		ajaxPOST("file.php",null,"url","save.json","data",JSON.stringify(data));
+	}
+	
 	function pause() {
 		hide($("info"));
 		hide($("next"));
 		hide($("back"));
+		show($("save"));
 		clearInterval(timer);
 		this.textContent = "Play";
 		this.onclick = play;
@@ -39,6 +45,7 @@
 		show($("info"));
 		show($("next"));
 		show($("back"));
+		hide($("save"));
 		timer = setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
 		this.textContent = "Pause";
 		this.onclick = pause;
