@@ -17,7 +17,7 @@
 		$("control").onclick = play;
 		$("next").onclick = next;
 		$("back").onclick = back;
-		document.addEventListener("keydown", key);
+		document.addEventListener("keydown", pressKey);
 	});
 	
 	function loadData(json) {
@@ -44,6 +44,18 @@
 		this.onclick = pause;
 	}
 	
+	function pressKey(event) {
+		let key = event.keyCode;
+		if (key === 32) 
+			$("control").click();	// space = pause/play
+		else if (key === 39 && !$("next").classList.contains("hidden"))
+			$("next").click();		// right arrow = next
+		else if (key === 37 && !$("back").classList.contains("hidden"))
+			$("back").click();		// left arrow = back
+//		else console.log("key " + key + " pressed");
+
+	}
+	
 	function refresh() {
 		$("title").textContent = data.countries[data.current.index].name;
 		$("flag").src = data.countries[data.current.index].flag;
@@ -63,11 +75,6 @@
 		data.current.index = wrap(data.current.index - 1, 0, data.countries.length - 1);
 		refresh();
  	}
-	
-	function key(event) {
-		if (event.keyCode == 32) next();
-		else if (event.keyCode == 13) back();
-	}
 	
 	function resetTime() {
 		data.current.time = 0;
