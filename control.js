@@ -13,29 +13,30 @@
 	let timer = undefined;
 	
 	window.addEventListener("load", function() {
-		ajaxGET("default_info.json", loadData);
-		$("control").onclick = play;
+		$("control").onclick = function() { ajaxGET("default.json", loadData); };
+		$("resume").onclick = function() { ajaxGET("save.json", loadData); }
 		$("next").onclick = next;
 		$("back").onclick = back;
-		$("save").onclick = saveData;
 		document.addEventListener("keydown", pressKey);
 	});
 	
 	function loadData(json) {
 		data = JSON.parse(json);
 		refresh();
-		show($("control"));
+		hide($("resume"));
+		$("control").onclick = play;
+		$("control").click();
 	}
 	
-	function saveData(url) {
+	function saveData() {
 		ajaxPOST("file.php",null,"url","save.json","data",JSON.stringify(data));
 	}
 	
 	function pause() {
+		saveData();
 		hide($("info"));
 		hide($("next"));
 		hide($("back"));
-		show($("save"));
 		clearInterval(timer);
 		this.textContent = "Play";
 		this.onclick = play;
@@ -45,7 +46,6 @@
 		show($("info"));
 		show($("next"));
 		show($("back"));
-		hide($("save"));
 		timer = setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
 		this.textContent = "Pause";
 		this.onclick = pause;
@@ -64,28 +64,32 @@
 	}
 	
 	function refresh() {
+		saveData();
 		$("title").textContent = data.countries[data.current.index].name;
 		$("flag").src = data.countries[data.current.index].flag;
 		if (anthem) anthem.pause();
 		anthem = new Audio(data.countries[data.current.index].anthem);
 		anthem.loop = true;
 		anthem.play();
-		resetTime();
+		printTime();
 	}
 	
 	function next() {
 		data.current.index = wrap(data.current.index + 1, 0, data.countries.length - 1);
 		refresh();
+		resetTime();
  	}
 	
 	function back() {
 		data.current.index = wrap(data.current.index - 1, 0, data.countries.length - 1);
 		refresh();
- 	}
+		resetTime();
+	}
 	
 	function resetTime() {
 		data.current.time = 0;
 		printTime();
+		
 	}
 	
 	function updateTime() {
