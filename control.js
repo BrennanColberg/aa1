@@ -13,16 +13,17 @@
 	let timer = undefined;
 	
 	window.addEventListener("load", function() {
-		$("control").onclick = function() { ajaxGET("default.json", loadData); };
-		$("resume").onclick = function() { ajaxGET("save.json", loadData); }
+		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
+		$("resume").onclick = function() { ajaxGET("save.json", loadGame); }
 		$("next").onclick = next;
 		$("back").onclick = back;
 		document.addEventListener("keydown", pressKey);
 	});
 	
-	function loadData(json) {
+	function loadGame(json) {
 		data = JSON.parse(json);
 		refresh();
+		
 		hide($("resume"));
 		$("control").onclick = play;
 		$("control").click();
