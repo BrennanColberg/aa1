@@ -10,32 +10,38 @@
 	
 	let data = undefined;
 	let anthem = undefined;
+	let timer = undefined;
 	
 	window.addEventListener("load", function() {
 		ajaxGET("default_info.json", loadData);
-		hide($("title"));
-		hide($("timer"));
-		hide($("flag"));
-		hide($("back"));
-		$("next").textContent = "Start";
-		$("next").onclick = start;
+		$("control").onclick = play;
+		$("next").onclick = next;
 		$("back").onclick = back;
 		document.addEventListener("keydown", key);
 	});
 	
 	function loadData(json) {
 		data = JSON.parse(json);
+		refresh();
+		show($("control"));
 	}
 	
-	function start() {
-		show($("title"));
-		show($("timer"));
-		show($("flag"));
+	function pause() {
+		hide($("info"));
+		hide($("next"));
+		hide($("back"));
+		clearInterval(timer);
+		this.textContent = "Play";
+		this.onclick = play;
+	}
+	
+	function play() {
+		show($("info"));
+		show($("next"));
 		show($("back"));
-		refresh();
-		this.textContent = "Next";
-		this.onclick = next;
-		setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
+		timer = setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
+		this.textContent = "Pause";
+		this.onclick = pause;
 	}
 	
 	function refresh() {
