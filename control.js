@@ -34,7 +34,6 @@
 	
 	function pause() {
 		saveData();
-		hide($("info"));
 		hide($("next"));
 		hide($("back"));
 		clearInterval(timer);
