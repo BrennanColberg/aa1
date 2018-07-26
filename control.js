@@ -14,7 +14,7 @@
 	
 	window.addEventListener("load", function() {
 		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
-		$("resume").onclick = function() { loadGame(JSON.stringify(load())); } // from jsdb/io.js
+		$("resume").onclick = function() { loadGame(load()); } // from jsdb/io.js
 		$("next").onclick = next;
 		$("back").onclick = back;
 		document.addEventListener("keydown", pressKey);
@@ -30,7 +30,7 @@
 	}
 	
 	function saveData() {
-		save(data); // from jsdb/io.js
+		save(JSON.stringify(data)); // from jsdb/io.js
 	}
 	
 	function pause() {
