@@ -1,7 +1,3 @@
-function $(id) { return document.getElementById(id); }
-function qs(selector) { return document.querySelector(selector); }
-function qsa(selector) { return document.querySelectorAll(selector); }
-function ce(tag) { return document.createElement(tag); }
 function checkStatus(response) { // used for AJAX 
   if (response.status >= 200 && response.status < 300) {  
     return response.text();

@@ -14,7 +14,7 @@
 	
 	window.addEventListener("load", function() {
 		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
-		$("resume").onclick = function() { ajaxGET("save.json", loadGame); }
+		$("resume").onclick = function() { loadGame(JSON.stringify(load())); } // from jsdb/io.js
 		$("next").onclick = next;
 		$("back").onclick = back;
 		document.addEventListener("keydown", pressKey);
@@ -30,7 +30,7 @@
 	}
 	
 	function saveData() {
-		ajaxPOST("file.php",null,"url","save.json","data",JSON.stringify(data));
+		save(data); // from jsdb/io.js
 	}
 	
 	function pause() {
@@ -89,7 +89,6 @@
 	function resetTime() {
 		data.current.time = 0;
 		printTime();
-		
 	}
 	
 	function updateTime() {
