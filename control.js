@@ -17,13 +17,15 @@
 		$("resume").onclick = function() { loadGame(load()); } // from jsdb/io.js
 		$("next").onclick = next;
 		$("back").onclick = back;
+		if (load()) show($("resume"));
 		document.addEventListener("keydown", pressKey);
+		window.addEventListener("beforeunload", saveData);
+		window.addEventListener("blur", saveData);
 	});
 	
 	function loadGame(json) {
 		data = JSON.parse(json);
 		refresh();
-		
 		hide($("resume"));
 		$("control").onclick = play;
 		$("control").click();
@@ -34,7 +36,6 @@
 	}
 	
 	function pause() {
-		saveData();
 		hide($("next"));
 		hide($("back"));
 		clearInterval(timer);
@@ -64,7 +65,6 @@
 	}
 	
 	function refresh() {
-		saveData();
 		$("title").textContent = data.countries[data.current.index].name;
 		$("flag").src = data.countries[data.current.index].flag;
 		if (anthem) anthem.pause();
