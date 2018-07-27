@@ -25,7 +25,8 @@
 	
 	function loadGame(json) {
 		data = JSON.parse(json);
-		refresh();
+		updateDisplay();
+		startAnthem();
 		hide($("resume"));
 		$("control").onclick = play;
 		$("control").click();
@@ -36,6 +37,7 @@
 	}
 	
 	function pause() {
+		anthem.pause();
 		hide($("next"));
 		hide($("back"));
 		clearInterval(timer);
@@ -44,6 +46,7 @@
 	}
 	
 	function play() {
+		anthem.play()
 		show($("info"));
 		show($("next"));
 		show($("back"));
@@ -64,26 +67,34 @@
 
 	}
 	
-	function refresh() {
+	function updateDisplay() {
 		$("title").textContent = data.countries[data.current.index].name;
 		$("flag").src = data.countries[data.current.index].flag;
+		printTime();
+	}
+	
+	function startAnthem() {
 		if (anthem) anthem.pause();
 		anthem = new Audio(data.countries[data.current.index].anthem);
 		anthem.loop = true;
-		anthem.play();
-		printTime();
+		anthem.addEventListener('loadedmetadata', function() {
+    		this.currentTime = (data.current.time / 1000.0) % this.duration;
+    		this.play(); 
+		});
 	}
 	
 	function next() {
 		data.current.index = wrap(data.current.index + 1, 0, data.countries.length - 1);
-		refresh();
+		updateDisplay();
 		resetTime();
+		startAnthem();
  	}
 	
 	function back() {
 		data.current.index = wrap(data.current.index - 1, 0, data.countries.length - 1);
-		refresh();
+		updateDisplay();
 		resetTime();
+		startAnthem();
 	}
 	
 	function resetTime() {
