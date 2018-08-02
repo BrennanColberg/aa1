@@ -14,7 +14,7 @@
 	
 	window.addEventListener("load", function() {
 		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
-		$("resume").onclick = function() { loadGame(load()); } // from jsdb/io.js
+		$("resume").onclick = function() { loadGame(loadCookie("data")); }
 		$("next").onclick = next;
 		$("back").onclick = back;
 		if (load()) show($("resume"));
@@ -33,7 +33,7 @@
 	}
 	
 	function saveData() {
-		save(JSON.stringify(data)); // from jsdb/io.js
+		saveCookie("data", JSON.stringify(data));
 	}
 	
 	function pause() {
