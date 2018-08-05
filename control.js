@@ -2,9 +2,6 @@
 (function() {
 	
 	function $(id) { return document.getElementById(id); }
-	function qs(key) { return document.querySelector(key); }
-	function qsa(key) { return document.querySelector(key); }
-	function tag(tag) { return document.getElementsByTagName(tag); }
 	function hide(dom) { dom.classList.add("hidden"); }
 	function show(dom) { dom.classList.remove("hidden"); }
 	
@@ -95,6 +92,13 @@
 		updateDisplay();
 		resetTime();
 		startAnthem();
+	}
+	
+	function wrap(num, min, max) {
+		let r = max - min + 1;
+		while(num > max) num -= r;
+		while(num < min) num += r;
+		return num;
 	}
 	
 	function resetTime() {
