@@ -17,7 +17,7 @@
 		$("resume").onclick = function() { loadGame(loadCookie("data")); }
 		$("next").onclick = next;
 		$("back").onclick = back;
-		if (load()) show($("resume"));
+		if (cookieExists("data")) show($("resume"));
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", saveData);
 		window.addEventListener("blur", saveData);
