@@ -33,7 +33,7 @@
 	}
 	
 	function saveData() {
-		saveCookie("data", JSON.stringify(data));
+		if (data) saveCookie("data", JSON.stringify(data));
 	}
 	
 	function pause() {
