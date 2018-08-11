@@ -14,7 +14,7 @@
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		// loads JS to buttons
-		$("control").onclick = function() { ajaxGET("game/default.json", loadGame); };
+		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
 		$("resume").onclick = function() { loadGame(loadCookie("data")); }
 		$("next").onclick = next;
 		$("back").onclick = back;
