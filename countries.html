@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://brennancolberg.github.io/abbr/js/ajax.js" type="text/javascript"></script>
+		<script src="https://brennancolberg.github.io/abbr/js/abbr.js" type="text/javascript"></script>
+	</head>
+	<body style="text-align: center">
+		<script type="text/javascript">
+			
+			ajaxGET("map/1942/layout.json", function(json) {
+				let data = JSON.parse(json);
+				console.log(data.territories);
+				let territories = data.territories;
+				let names = [];
+				for (let i in territories) {
+					names.push(territories[i].name);
+					console.log(territories[i].name);
+				}
+				names.sort();
+				for (let n in names) {
+					p = ce("p");
+					p.textContent = names[n];
+					qs("body").appendChild(p);
+				}
+			});
+			
+		</script>
+	</body>
+</html>

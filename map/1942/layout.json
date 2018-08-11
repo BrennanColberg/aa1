@@ -216,7 +216,7 @@
 			"value" : 3
 		},
 		{
-			"name" : "Morocco & Algeria",
+			"name" : "Algeria",
 			"value" : 1
 		},
 		{
@@ -335,10 +335,6 @@
 		},
 		{
 			"name" : "Mongolia",
-			"value" : -1
-		},
-		{
-			"name" : "Eire",
 			"value" : -1
 		}
 		
