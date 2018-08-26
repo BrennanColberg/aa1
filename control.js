@@ -24,6 +24,8 @@
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", saveData);
 		window.addEventListener("blur", saveData);
+		anthem = document.createElement("audio");
+		anthem.loop = true;
 	});
 	
 	// loads the given JSON as the game state (default or save)
@@ -95,15 +97,12 @@
 	
 	// starts playing the current country's anthem
 	function startAnthem() {
-		// stops currently playing anthem if it exists
-		if (anthem) anthem.pause();
-		anthem = new Audio(data.countries[data.current.index].anthem);
-		anthem.loop = true;
-		// resumes correct time loading from a save?
-		anthem.addEventListener('loadedmetadata', function() {
-    		this.currentTime = (data.current.time / 1000.0) % this.duration;
-    		this.play(); 
-		});
+		anthem.pause();
+		anthem.src = data.countries[data.current.index].anthem;
+		anthem.currentTime = 0.0;
+		// Restart-on-play from data not working:
+		// anthem.currentTime = (data.current.time / 1000.0) % anthem.duration
+    	anthem.play();
 	}
 	
 	// goes to the next country's turn
@@ -140,7 +139,8 @@
 	// updates the timer
 	function updateTime() {
 		data.current.time += data.MEASURED_TIME_INTERVAL;
-		data.countries[data.current.index].elapsed_time += data.MEASURED_TIME_INTERVAL;
+		data.countries[data.current.index].elapsed_time +=
+			data.MEASURED_TIME_INTERVAL;
 		printTime();
 	}
 	
