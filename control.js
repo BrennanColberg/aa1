@@ -8,12 +8,15 @@
 	
 	// declaring module-global variables
 	let data = undefined;
+	let country = undefined;
 	let anthemPlayer = new AnthemPlayer();
-	let timer = undefined;
 	let timerObject = new Timer();
+	let timer = undefined;
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
+		// AJAX setup
+		ajaxGET("save/timer.json", timerObject.load);
 		// loads JS to buttons
 		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
 		$("resume").onclick = function() { loadGame(loadCookie("data")); }
@@ -36,6 +39,8 @@
 		// I do this weirdly because play references "this"
 		// and so it needs to be called by a click not a direct
 		// method invocation
+		timerObject.setCountry(data.countries[data.current.index].name.toLowerCase());
+		setInterval(printTime, 10);
 		$("control").onclick = play;
 		$("control").click();
 	}
@@ -54,9 +59,9 @@
 	// pauses the game (stops timer, stops music, etc)
 	function pause() {
 		anthemPlayer.pause();
+		timerObject.pause();
 		hide($("next"));
 		hide($("back"));
-		clearInterval(timer);
 		// toggling "pause" button to "play" button
 		this.textContent = "Play";
 		this.onclick = play;
@@ -65,10 +70,10 @@
 	// starts/resumes/"play"s the game (starts timer, starts music)
 	function play() {
 		anthemPlayer.play();
+		timerObject.play();
 		show($("info"));
 		show($("next"));
 		show($("back"));
-		timer = setInterval(updateTime, data.MEASURED_TIME_INTERVAL);
 		// toggling "play" button to "pause" button
 		this.textContent = "Pause";
 		this.onclick = pause;
@@ -126,22 +131,13 @@
 	
 	// resets the current time
 	function resetTime() {
+		timerObject.setCountry(data.countries[data.current.index].name.toLowerCase());
 		timerObject.reset();
-		printTime();
-	}
-	
-	// updates the timer
-	function updateTime() {
-		timerObject.update(data.MEASURED_TIME_INTERVAL);
-		data.countries[data.current.index].elapsed_time +=
-			data.MEASURED_TIME_INTERVAL;
-		printTime();
 	}
 	
 	// prints the time to the screen
 	function printTime() {
 		timerObject.display($("currentTime"), $("totalTime"));
-		$("totalTime").textContent = timerObject.toString(data.countries[data.current.index].elapsed_time);
 	}
 	
 })();
