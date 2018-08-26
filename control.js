@@ -8,18 +8,19 @@
 	
 	// declaring module-global variables
 	let data = undefined;
-	let country = undefined;
 	let anthemPlayer = new AnthemPlayer();
-	let timerObject = new Timer();
-	let timer = undefined;
+	let timer = new Timer();
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		// AJAX setup
-		ajaxGET("save/timer.json", timerObject.load);
+		ajaxGET("save/timer.json", timer.load);
 		// loads JS to buttons
 		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
-		$("resume").onclick = function() { loadGame(loadCookie("data")); }
+		$("resume").onclick = function() { 
+			if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
+			if (cookieExists("data")) { loadGame(loadCookie("data")); }
+		}
 		$("next").onclick = next;
 		$("back").onclick = back;
 		// shows "resume" button if there's a save
@@ -33,33 +34,32 @@
 	// loads the given JSON as the game state (default or save)
 	function loadGame(json) {
 		data = JSON.parse(json);
+		console.log(data);
 		updateDisplay();
 		startAnthem();
 		hide($("resume")); // no need to "resume" anymore
+		timer.setCountry(data.current);
+		setInterval(printTime, 10);
 		// I do this weirdly because play references "this"
 		// and so it needs to be called by a click not a direct
 		// method invocation
-		timerObject.setCountry(data.countries[data.current.index].name.toLowerCase());
-		setInterval(printTime, 10);
 		$("control").onclick = play;
 		$("control").click();
+		
 	}
 	
-	// saves game state to a JSON-format cookie (which is notably
-	// not a good way to store data, but I'm hosting on GitHub
-	// Pages to cheap out on server space so it's fine I guess)
+	// saves game state, in various JSON files, into the cookies
 	function saveData() {
-		// logic check to avoid saving blank data and screwing
-		// everything up
 		if (data) {
 			saveCookie("data", JSON.stringify(data));
 		}
+		saveCookie("timer", timer.save());
 	}
 	
 	// pauses the game (stops timer, stops music, etc)
 	function pause() {
 		anthemPlayer.pause();
-		timerObject.pause();
+		timer.pause();
 		hide($("next"));
 		hide($("back"));
 		// toggling "pause" button to "play" button
@@ -70,7 +70,7 @@
 	// starts/resumes/"play"s the game (starts timer, starts music)
 	function play() {
 		anthemPlayer.play();
-		timerObject.play();
+		timer.play();
 		show($("info"));
 		show($("next"));
 		show($("back"));
@@ -94,29 +94,37 @@
 	
 	// loads the current country's name and flag
 	function updateDisplay() {
-		$("title").textContent = data.countries[data.current.index].name;
-		$("flag").src = data.countries[data.current.index].flag;
+		$("title").textContent = data.countries[data.current].name;
+		$("flag").src = data.countries[data.current].flag;
 		printTime();
 	}
 	
 	// starts playing the current country's anthem
 	function startAnthem() {
-		anthemPlayer.start(data.countries[data.current.index].anthem);
+		anthemPlayer.start(data.countries[data.current].anthem);
 	}
 	
 	// goes to the next country's turn
 	function next() {
-		data.current.index = wrap(data.current.index + 1, 0, data.countries.length - 1);
+		data.current = 
+			data.order[
+				wrap(data.order.indexOf(data.current) + 1, 0, data.countries.length - 1)
+			];
+		timer.setCountry(data.current);
 		updateDisplay();
-		resetTime();
+		timer.reset();
 		startAnthem();
  	}
 	
 	// goes to the last country's turn
 	function back() {
-		data.current.index = wrap(data.current.index - 1, 0, data.countries.length - 1);
+		data.current = 
+			data.order[
+				wrap(data.order.indexOf(data.current) - 1, 0, data.countries.length - 1)
+			];
+		timer.setCountry(data.current);
 		updateDisplay();
-		resetTime();
+		timer.reset();
 		startAnthem();
 	}
 	
@@ -129,15 +137,9 @@
 		return num;
 	}
 	
-	// resets the current time
-	function resetTime() {
-		timerObject.setCountry(data.countries[data.current.index].name.toLowerCase());
-		timerObject.reset();
-	}
-	
 	// prints the time to the screen
 	function printTime() {
-		timerObject.display($("currentTime"), $("totalTime"));
+		timer.display($("currentTime"), $("totalTime"));
 	}
 	
 })();

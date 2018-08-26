@@ -11,7 +11,6 @@ function Timer() {
 	// saving/loading data
 	this.load = function(json) {
 		time = JSON.parse(json);
-		console.log(time);
 	}
 	this.save = function() {
 		return JSON.stringify(time);
