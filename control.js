@@ -24,8 +24,7 @@
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", saveData);
 		window.addEventListener("blur", saveData);
-		anthem = document.createElement("audio");
-		anthem.loop = true;
+		anthem = new Anthem();
 	});
 	
 	// loads the given JSON as the game state (default or save)
@@ -65,7 +64,7 @@
 
 	// starts/resumes/"play"s the game (starts timer, starts music)
 	function play() {
-		anthem.play()
+		anthem.play();
 		show($("info"));
 		show($("next"));
 		show($("back"));
@@ -97,12 +96,7 @@
 	
 	// starts playing the current country's anthem
 	function startAnthem() {
-		anthem.pause();
-		anthem.src = data.countries[data.current.index].anthem;
-		anthem.currentTime = 0.0;
-		// Restart-on-play from data not working:
-		// anthem.currentTime = (data.current.time / 1000.0) % anthem.duration
-    	anthem.play();
+		anthem.start(data.countries[data.current.index].anthem);
 	}
 	
 	// goes to the next country's turn
