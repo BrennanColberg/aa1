@@ -1,32 +1,30 @@
-[
-	{
-		"name": "USSR",
-		"color": "#590816",
-		"flag": "flags/ussr.png",
-		"anthem": "anthems/ussr.mp3"
+{
+	"name": {
+		"ussr": "USSR",
+		"germany": "Germany",
+		"britain": "Britain",
+		"japan": "Japan",
+		"usa": "USA"
 	},
-	{
-		"name": "Germany",
-		"color": "#00000",
-		"flag": "flags/germany.png",
-		"anthem": "anthems/germany.mp3"
+	"color": {
+		"ussr": "#590816",
+		"germany": "#00000",
+		"britain": "#d3d098",
+		"japan": "#e29e0b",
+		"usa": "#1a7705"
 	},
-	{
-		"name": "Britain",
-		"color": "#d3d098",
-		"flag": "flags/britain.png",
-		"anthem": "anthems/britain.mp3"
+	"flag": {
+		"ussr": "resources/flags/ussr.png",
+		"britain": "resources/flags/britain.png",
+		"germany": "resources/flags/germany.png",
+		"japan": "resources/flags/japan.png",
+		"usa": "resources/flags/usa.png"
 	},
-	{
-		"name": "Japan",
-		"color": "#e29e0b",
-		"flag": "flags/japan.png",
-		"anthem": "anthems/japan.mp3"
-	},
-	{
-		"name": "USA",
-		"color": "#1a7705",
-		"flag": "flags/usa.png",
-		"anthem": "anthems/usa.mp3"
+	"anthem": {
+		"ussr": "resources/anthems/ussr.mp3",
+		"britain": "resources/anthems/britain.mp3",
+		"germany": "resources/anthems/germany.mp3",
+		"japan": "resources/anthems/japan.mp3",
+		"usa": "resources/anthems/usa.mp3"
 	}
-]
+}

@@ -7,7 +7,10 @@
 	function show(dom) { dom.classList.remove("hidden"); }
 	
 	// declaring module-global variables
-	let data = undefined;
+	let current = undefined;
+	let order = undefined;
+	let defaultState = undefined;
+	let resources = undefined;
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
 	
@@ -15,31 +18,44 @@
 	window.addEventListener("load", function() {
 		// AJAX setup
 		ajaxGET("save/timer.json", timer.load);
+		ajaxGET("resources/order.json", loadOrder);
+		ajaxGET("default.json", loadDefault);
+		ajaxGET("resources/index.json", loadResources);
 		// loads JS to buttons
-		$("control").onclick = function() { ajaxGET("default.json", loadGame); };
+		$("control").onclick = startGame;
 		$("resume").onclick = function() { 
 			if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
-			if (cookieExists("data")) { loadGame(loadCookie("data")); }
+			if (cookieExists("current")) { current = loadCookie("current"); }
+			startGame();
 		}
 		$("next").onclick = next;
 		$("back").onclick = back;
 		// shows "resume" button if there's a save
-		if (cookieExists("data")) show($("resume"));
+		if (cookieExists("current")) show($("resume"));
 		// adds more event listeners (for saving, keys, etc)
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", saveData);
 		window.addEventListener("blur", saveData);
 	});
 	
-	// loads the given JSON as the game state (default or save)
-	function loadGame(json) {
-		data = JSON.parse(json);
-		console.log(data);
+	function loadOrder(json) {
+		order = JSON.parse(json);
+	}
+	function loadDefault(json) {
+		defaultState = JSON.parse(json);
+		current = defaultState.current;
+	}
+	function loadResources(json) {
+		resources = JSON.parse(json);
+	}
+	
+	// starts the game
+	function startGame() {
 		updateDisplay();
 		startAnthem();
 		hide($("resume")); // no need to "resume" anymore
-		timer.setCountry(data.current);
-		setInterval(printTime, 10);
+		timer.setCountry(current);
+		setInterval(printTime, 10); // TODO fix this sloppiness; pass DOM
 		// I do this weirdly because play references "this"
 		// and so it needs to be called by a click not a direct
 		// method invocation
@@ -50,9 +66,7 @@
 	
 	// saves game state, in various JSON files, into the cookies
 	function saveData() {
-		if (data) {
-			saveCookie("data", JSON.stringify(data));
-		}
+		saveCookie("current", current);
 		saveCookie("timer", timer.save());
 	}
 	
@@ -94,23 +108,23 @@
 	
 	// loads the current country's name and flag
 	function updateDisplay() {
-		$("title").textContent = data.countries[data.current].name;
-		$("flag").src = data.countries[data.current].flag;
+		$("title").textContent = resources.name[current];
+		$("flag").src = resources.flag[current];
 		printTime();
 	}
 	
 	// starts playing the current country's anthem
 	function startAnthem() {
-		anthemPlayer.start(data.countries[data.current].anthem);
+		anthemPlayer.start(resources.anthem[current]);
 	}
 	
 	// goes to the next country's turn
 	function next() {
-		data.current = 
-			data.order[
-				wrap(data.order.indexOf(data.current) + 1, 0, data.countries.length - 1)
+		current = 
+			order[
+				wrap(order.indexOf(current) + 1, 0, order.length - 1)
 			];
-		timer.setCountry(data.current);
+		timer.setCountry(current);
 		updateDisplay();
 		timer.reset();
 		startAnthem();
@@ -118,11 +132,11 @@
 	
 	// goes to the last country's turn
 	function back() {
-		data.current = 
-			data.order[
-				wrap(data.order.indexOf(data.current) - 1, 0, data.countries.length - 1)
+		current = 
+			order[
+				wrap(order.indexOf(current) - 1, 0, order.length - 1)
 			];
-		timer.setCountry(data.current);
+		timer.setCountry(current);
 		updateDisplay();
 		timer.reset();
 		startAnthem();
