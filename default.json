@@ -3,36 +3,36 @@
 		{
 			"name" : "USSR",
 			"color" : "#590816",
-			"flag" : "flags/ussr.png",
-			"anthem": "anthems/ussr.mp3",
+			"flag" : "resources/flags/ussr.png",
+			"anthem": "resources/anthems/ussr.mp3",
 			"elapsed_time" : 0
 		},
 		{
 			"name" : "Germany",
 			"color" : "#00000",
-			"flag" : "flags/germany.png",
-			"anthem" : "anthems/germany.mp3",
+			"flag" : "resources/flags/germany.png",
+			"anthem" : "resources/anthems/germany.mp3",
 			"elapsed_time" : 0
 		},
 		{
 			"name" : "Britain",
 			"color" : "#d3d098",
-			"flag" : "flags/britain.png",
-			"anthem" : "anthems/britain.mp3",
+			"flag" : "resources/flags/britain.png",
+			"anthem" : "resources/anthems/britain.mp3",
 			"elapsed_time" : 0
 		},
 		{
 			"name" : "Japan",
 			"color" : "#e29e0b",
-			"flag" : "flags/japan.png",
-			"anthem" : "anthems/japan.mp3",
+			"flag" : "resources/flags/japan.png",
+			"anthem" : "resources/anthems/japan.mp3",
 			"elapsed_time" : 0
 		},
 		{
 			"name" : "USA",
 			"color" : "#1a7705",
-			"flag" : "flags/usa.png",
-			"anthem" : "anthems/usa.mp3",
+			"flag" : "resources/flags/usa.png",
+			"anthem" : "resources/anthems/usa.mp3",
 			"elapsed_time" : 0
 		}
 	],
