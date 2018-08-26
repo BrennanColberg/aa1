@@ -6,6 +6,7 @@ function Timer() {
 	let current = 0;
 	let country = undefined;
 	let ticker = undefined;
+	let cDOM = undefined, oDOM = undefined;
 	
 	// saving/loading data
 	this.load = function(json) {
