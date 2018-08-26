@@ -4,12 +4,15 @@ function AnthemPlayer() {
 	dom.loop = true;
 	
 	// starts playing the current country's anthem, given file name
-	this.start = function(file) {
-		dom.src = file;
-		dom.currentTime = 0.0;
-		// Restart-on-play from data not working (code is from old version):
-		// anthem.currentTime = (data.current.time / 1000.0) % anthem.duration
-    	dom.play();
+	this.start = function(file, time = 0.0) {
+		if (file !== dom.src) {
+			dom.src = file;
+			dom.onloadedmetadata = function() {
+				console.log(dom.duration);
+				dom.currentTime = (time / 1000.0) % dom.duration;
+				dom.play();
+			}
+		}
 	}
 	
 	// resumes the music

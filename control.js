@@ -13,6 +13,7 @@
 	let resources = undefined;
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
+	let timerDisplay = undefined;
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
@@ -51,11 +52,9 @@
 	
 	// starts the game
 	function startGame() {
-		updateDisplay();
-		startAnthem();
 		hide($("resume")); // no need to "resume" anymore
-		timer.setCountry(current);
-		setInterval(printTime, 10); // TODO fix this sloppiness; pass DOM
+		updateCountry();
+		// TODO fix this sloppiness; pass DOM
 		// I do this weirdly because play references "this"
 		// and so it needs to be called by a click not a direct
 		// method invocation
@@ -107,10 +106,18 @@
 	}
 	
 	// loads the current country's name and flag
-	function updateDisplay() {
+	function updateCountry() {
+		
 		$("title").textContent = resources.name[current];
 		$("flag").src = resources.flag[current];
+		startAnthem();
+		
+		timer.setCountry(current);
+		timer.reset();
 		printTime();
+		if (timerDisplay) clearInterval(timerDisplay);
+		timerDisplay = setInterval(printTime, 1000);
+		
 	}
 	
 	// starts playing the current country's anthem
@@ -120,26 +127,14 @@
 	
 	// goes to the next country's turn
 	function next() {
-		current = 
-			order[
-				wrap(order.indexOf(current) + 1, 0, order.length - 1)
-			];
-		timer.setCountry(current);
-		updateDisplay();
-		timer.reset();
-		startAnthem();
+		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
+		updateCountry();
  	}
 	
 	// goes to the last country's turn
 	function back() {
-		current = 
-			order[
-				wrap(order.indexOf(current) - 1, 0, order.length - 1)
-			];
-		timer.setCountry(current);
-		updateDisplay();
-		timer.reset();
-		startAnthem();
+		current = order[wrap(order.indexOf(current) - 1, 0, order.length - 1)];
+		updateCountry();
 	}
 	
 	// standard method for wrapping numbers (confines to boundaries
