@@ -1,4 +1,4 @@
-function Anthem() {
+function AnthemPlayer() {
 	
 	let dom = document.createElement("audio");
 	dom.loop = true;

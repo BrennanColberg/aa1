@@ -8,8 +8,9 @@
 	
 	// declaring module-global variables
 	let data = undefined;
-	let anthem = undefined;
+	let anthemPlayer = new AnthemPlayer();
 	let timer = undefined;
+	let timerObject = new Timer();
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
@@ -24,7 +25,6 @@
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", saveData);
 		window.addEventListener("blur", saveData);
-		anthem = new Anthem();
 	});
 	
 	// loads the given JSON as the game state (default or save)
@@ -53,7 +53,7 @@
 	
 	// pauses the game (stops timer, stops music, etc)
 	function pause() {
-		anthem.pause();
+		anthemPlayer.pause();
 		hide($("next"));
 		hide($("back"));
 		clearInterval(timer);
@@ -64,7 +64,7 @@
 
 	// starts/resumes/"play"s the game (starts timer, starts music)
 	function play() {
-		anthem.play();
+		anthemPlayer.play();
 		show($("info"));
 		show($("next"));
 		show($("back"));
@@ -96,7 +96,7 @@
 	
 	// starts playing the current country's anthem
 	function startAnthem() {
-		anthem.start(data.countries[data.current.index].anthem);
+		anthemPlayer.start(data.countries[data.current.index].anthem);
 	}
 	
 	// goes to the next country's turn
@@ -126,13 +126,13 @@
 	
 	// resets the current time
 	function resetTime() {
-		data.current.time = 0;
+		timerObject.reset();
 		printTime();
 	}
 	
 	// updates the timer
 	function updateTime() {
-		data.current.time += data.MEASURED_TIME_INTERVAL;
+		timerObject.update(data.MEASURED_TIME_INTERVAL);
 		data.countries[data.current.index].elapsed_time +=
 			data.MEASURED_TIME_INTERVAL;
 		printTime();
@@ -140,21 +140,8 @@
 	
 	// prints the time to the screen
 	function printTime() {
-		$("currentTime").textContent = timeString(data.current.time);
-		$("totalTime").textContent = timeString(data.countries[data.current.index].elapsed_time);
-	}
-	
-	// turns an int millisecond measurement into a 00:00:00 clock
-	function timeString(time) {
-		let result = "";
-		time = Math.floor(time);
-		let seconds = 	Math.floor(time / 1000) % 60;
-		let minutes = 	Math.floor(time / 1000 / 60) % 60;
-		let hours = 	Math.floor(time / 1000 / 60 / 60);
-		if (hours) result += hours + ":";
-		result += (minutes < 10 ? "0" : "") + minutes + ":";
-		result += (seconds < 10 ? "0" : "") + seconds;
-		return result;
+		timerObject.display($("currentTime"), $("totalTime"));
+		$("totalTime").textContent = timerObject.toString(data.countries[data.current.index].elapsed_time);
 	}
 	
 })();
