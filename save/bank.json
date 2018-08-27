@@ -1,0 +1,16 @@
+{
+	"balance": {
+		"ussr": 24,
+		"germany": 40,
+		"britain": 30,
+		"japan": 30,
+		"usa": 42
+	},
+	"income": {
+		"ussr": 24,
+		"germany": 40,
+		"britain": 30,
+		"japan": 30,
+		"usa": 42
+	}
+}
