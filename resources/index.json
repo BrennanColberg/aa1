@@ -1,17 +1,17 @@
 {
 	"name": {
 		"ussr": "USSR",
-		"germany": "Germany",
-		"britain": "Britain",
-		"japan": "Japan",
+		"germany": "NSDAP",
+		"britain": "GBR",
+		"japan": "JAPAN",
 		"usa": "USA"
 	},
 	"color": {
-		"ussr": "#590816",
-		"germany": "#00000",
-		"britain": "#d3d098",
-		"japan": "#e29e0b",
-		"usa": "#1a7705"
+		"ussr": "#800f22",
+		"germany": "#525252",
+		"britain": "#d8d57d",
+		"japan": "#e4a51f",
+		"usa": "#227d0e"
 	},
 	"flag": {
 		"ussr": "resources/flags/ussr.png",

@@ -3,6 +3,8 @@
 	
 	// simple function abbreviations that shorten my code nicely
 	function $(id) { return document.getElementById(id); }
+	function qs(s) { return document.querySelector(s); }
+	function ce(tag) { return document.createElement(tag); }
 	function hide(dom) { dom.classList.add("hidden"); }
 	function show(dom) { dom.classList.remove("hidden"); }
 	
@@ -13,6 +15,7 @@
 	let resources = undefined;
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
+	let bank = new Bank();
 	let timerDisplay = undefined;
 	
 	// ultimate starting loading function
@@ -20,6 +23,7 @@
 		
 		// AJAX setup
 		ajaxGET("save/timer.json", timer.load);
+		ajaxGET("save/bank.json", bank.load);
 		ajaxGET("resources/order.json", loadOrder);
 		ajaxGET("default.json", loadDefault);
 		ajaxGET("resources/index.json", loadResources);
@@ -34,9 +38,6 @@
 		$("next").onclick = next;
 		$("back").onclick = back;
 		
-		// shows "resume" button if there's a save
-		if (cookieExists("current")) show($("resume"));
-		
 		// adds more event listeners (for saving, keys, etc)
 		document.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
@@ -47,6 +48,7 @@
 	// loads the gameplay order, succession of countries
 	function loadOrder(json) {
 		order = JSON.parse(json);
+		if (resources) generateStructure();
 	}
 	// loads default game state behavior (which may be overwritten by save)
 	function loadDefault(json) {
@@ -56,11 +58,55 @@
 	// loads paths and values of various static graphic resources
 	function loadResources(json) {
 		resources = JSON.parse(json);
+		if (order) generateStructure();
 	}
 	// saves game state, in various JSON files, into the cookies
 	function save() {
 		saveCookie("current", current);
 		saveCookie("timer", timer.save());
+	}
+	
+	// generates HTML structure!
+	function generateStructure() {
+		let table = qs("table");
+		for (let i = 0; i < order.length; i++) {
+			let country = order[i];
+				let row = ce("tr");
+				row.id = country;
+				let left = ce("td");
+					left.className = "left";
+					left.style.backgroundColor = resources.color[country];
+					let flag = ce("img");
+						flag.style.borderColor = resources.color[country];
+						flag.src = resources.flag[country];
+						flag.alt = country;
+						flag.className = "flag";
+					left.appendChild(flag);
+					let title = ce("h1");
+						title.textContent = resources.name[country];
+						title.className = "title";
+					left.appendChild(title);
+				row.appendChild(left);
+				let right = ce("td");
+					right.style.borderColor = resources.color[country];
+					right.style.color = resources.color[country];
+					right.className = "right";
+					let balance = ce("h2");
+						balance.textContent = "Balance: ";
+						let balanceSpan = ce("span");
+							balanceSpan.className = "balance";
+						balance.appendChild(balanceSpan);
+					right.appendChild(balance);
+					let income = ce("h2");
+						income.textContent = "Income: ";
+						let incomeSpan = ce("span");
+							incomeSpan.className = "income";
+						income.appendChild(incomeSpan);
+					right.appendChild(income);
+				row.appendChild(right);
+			table.appendChild(row);
+		}
+		updateBank();
 	}
 	
 	// starts the game
@@ -116,6 +162,15 @@
 	// displays the current time to the screen
 	function updateTimer() {
 		timer.display($("currentTime"), $("totalTime"));
+	}
+	// displays the current balances to the screen
+	function updateBank() {
+		for (let i = 0; i < order.length; i++) {
+			let country = order[i];
+			let balanceDOM = qs("#" + country + " .balance");
+			let incomeDOM = qs("#" + country + " .income");
+			bank.display(balanceDOM, incomeDOM, country);
+		}
 	}
 	
 	// goes to the next country's turn
