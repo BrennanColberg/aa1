@@ -40,7 +40,14 @@ body {
 	justify-content: space-around;
 }
 
-#bank h1 {
+#main h1 {
 	margin: 1vh 2vw;
 	font-size: 4vw;
+}
+
+#next {
+	color: inherit;
+	font-size: 4vw;
+	font-family: inherit;
+	font-weight: bold;
 }

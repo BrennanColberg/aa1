@@ -17,9 +17,12 @@
 	let timer = new Timer();
 	let bank = new Bank();
 	let timerDisplay = undefined;
+	let sidebar = [];
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
+		
+		$("next").onclick = next;
 		
 		// AJAX setup
 		if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
@@ -27,20 +30,14 @@
 		if (cookieExists("bank")) { bank.load(loadCookie("bank")); }
 		else { ajaxGET("save/bank.json", bank.load); }
 		ajaxGET("resources/order.json", loadOrder);
-		if (cookieExists("current")) { current = loadCookie("current"); }
-		else { ajaxGET("default.json", loadDefault); }
+		if (cookieExists("current")) { loadCurrent(JSON.stringify(loadCookie("current"))); }
+		else { ajaxGET("default.json", loadCurrent); }
 		ajaxGET("resources/index.json", loadResources);
 		
-		// loads JS to buttons
-//		$("control").onclick = start;
-//		$("resume").onclick = function() { 
-			start();
-//		}
-//		$("next").onclick = next;
-//		$("back").onclick = back;
+		console.log($("next"));
 		
 		// adds more event listeners (for saving, keys, etc)
-		document.addEventListener("keydown", pressKey);
+		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
 		window.addEventListener("blur", save);
 		
@@ -49,17 +46,17 @@
 	// loads the gameplay order, succession of countries
 	function loadOrder(json) {
 		order = JSON.parse(json);
-		if (resources) generateStructure();
+		if (current && resources) generateStructure();
 	}
 	// loads default game state behavior (which may be overwritten by save)
-	function loadDefault(json) {
-		defaultState = JSON.parse(json);
-		current = defaultState.current;
+	function loadCurrent(json) {
+		current = JSON.parse(json);
+		if (order && resources) generateStructure();
 	}
 	// loads paths and values of various static graphic resources
 	function loadResources(json) {
 		resources = JSON.parse(json);
-		if (order) generateStructure();
+		if (order && current) generateStructure();
 	}
 	// saves game state, in various JSON files, into the cookies
 	function save() {
@@ -108,8 +105,9 @@
 					right.appendChild(income);
 				row.appendChild(right);
 			table.appendChild(row);
+			sidebar[country] = row;
 		}
-		updateBank();
+		start();
 	}
 	
 	function select() {
@@ -126,47 +124,21 @@
 			}
 		}
 		current = id;
-		updateCountry();
-	}
-	
-	// starts the game
-	function start() {
-		updateCountry();
-		// TODO fix this sloppiness; pass DOM
-		// I do this weirdly because play references "this"
-		// and so it needs to be called by a click not a direct
-		// method invocation
-		$("control").onclick = play;
-		$("control").click();
-		
+		start();
 	}
 	// starts/resumes/"play"s the game (starts timer, starts music)
 	function play() {
 		anthemPlayer.play();
 		timer.play();
-		show($("info"));
-		show($("next"));
-		show($("back"));
-		// toggling "play" button to "pause" button
-		this.textContent = "Pause";
-		this.onclick = pause;
 	}
 	// pauses the game (stops timer, stops music, etc)
 	function pause() {
 		anthemPlayer.pause();
 		timer.pause();
-		hide($("next"));
-		hide($("back"));
-		// toggling "pause" button to "play" button
-		this.textContent = "Play";
-		this.onclick = play;
 	}
 	
 	// loads the current country's name, flag, and anthem
-	function updateCountry() {
-		
-//		$("title").textContent = resources.name[current];
-//		$("flag").src = resources.flag[current];
+	function start() {
 		
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
@@ -174,10 +146,10 @@
 		timer.reset();
 		
 		updateBank();
+		//updateTimer();
 		
-//		updateTimer();
-//		if (timerDisplay) clearInterval(timerDisplay);
-//		timerDisplay = setInterval(updateTimer, 1000);
+		//if (timerDisplay) clearInterval(timerDisplay);
+		//timerDisplay = setInterval(updateTimer, 1000);
 		
 	}
 	// displays the current time to the screen
@@ -200,13 +172,13 @@
 	// goes to the next country's turn
 	function next() {
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
-		updateCountry();
+		sidebar[current].click();
  	}
 	// goes to the last country's turn
-	function back() {
+	function last() {
 		current = order[wrap(order.indexOf(current) - 1, 0, order.length - 1)];
-		updateCountry();
-	}
+		sidebar[current].click();
+ 	}
 	// standard method for wrapping numbers (confines to boundaries
 	// but then adds excess in a periodic fashion)
 	function wrap(num, min, max) {
@@ -219,14 +191,9 @@
 	// tracks key presses and lets them do things
 	function pressKey(event) {
 		let key = event.keyCode;
-		if (key === 32) 
-			$("control").click();	// space = pause/play
-		else if (key === 39 && !$("next").classList.contains("hidden"))
-			$("next").click();		// right arrow = next
-		else if (key === 37 && !$("back").classList.contains("hidden"))
-			$("back").click();		// left arrow = back
-//		else console.log("key " + key + " pressed");
-
+		if (key === 32) {
+			$("next").click();
+		}
 	}
 	
 })();
