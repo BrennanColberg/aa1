@@ -46,7 +46,7 @@ table {
 }
 
 .selected .left {
-	padding: 2vh 0px;
+	padding: 4vh 0px;
 	justify-content: center;
 }
 .selected .left h1 {

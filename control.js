@@ -22,22 +22,22 @@
 	window.addEventListener("load", function() {
 		
 		// AJAX setup
-		ajaxGET("save/timer.json", timer.load);
-		ajaxGET("save/bank.json", bank.load);
+		if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
+		else { ajaxGET("save/timer.json", timer.load); }
+		if (cookieExists("bank")) { bank.load(loadCookie("bank")); }
+		else { ajaxGET("save/bank.json", bank.load); }
 		ajaxGET("resources/order.json", loadOrder);
-		ajaxGET("default.json", loadDefault);
+		if (cookieExists("current")) { current = loadCookie("current"); }
+		else { ajaxGET("default.json", loadDefault); }
 		ajaxGET("resources/index.json", loadResources);
 		
 		// loads JS to buttons
-		$("control").onclick = start;
-		$("resume").onclick = function() { 
-			if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
-			if (cookieExists("bank")) { bank.load(loadCookie("bank")); }
-			if (cookieExists("current")) { current = loadCookie("current"); }
+//		$("control").onclick = start;
+//		$("resume").onclick = function() { 
 			start();
-		}
-		$("next").onclick = next;
-		$("back").onclick = back;
+//		}
+//		$("next").onclick = next;
+//		$("back").onclick = back;
 		
 		// adds more event listeners (for saving, keys, etc)
 		document.addEventListener("keydown", pressKey);
@@ -70,11 +70,12 @@
 	
 	// generates HTML structure! code is hella ugly tho
 	function generateStructure() {
-		let table = qs("table");
+		let table = $("sidebar").contentDocument.querySelector("table");
 		for (let i = 0; i < order.length; i++) {
 			let country = order[i];
 				let row = ce("tr");
 				row.id = country;
+				row.onclick = select;
 				let left = ce("td");
 					left.className = "left";
 					left.style.backgroundColor = resources.color[country];
@@ -111,9 +112,25 @@
 		updateBank();
 	}
 	
+	function select() {
+		this.className = "selected";
+		let id = this.id;
+		let body = qs("body");
+		body.style.color = resources.color[id];
+		body.style.borderColor = resources.color[id];
+		body.style.backgroundColor = resources.color[id];
+		for (let i = 0; i < this.parentElement.childElementCount; i++) {
+			let node = this.parentElement.childNodes[i]
+			if (node !== this) {
+				node.classList.remove("selected");
+			}
+		}
+		current = id;
+		updateCountry();
+	}
+	
 	// starts the game
 	function start() {
-		hide($("resume")); // no need to "resume" anymore
 		updateCountry();
 		// TODO fix this sloppiness; pass DOM
 		// I do this weirdly because play references "this"
@@ -148,17 +165,19 @@
 	// loads the current country's name, flag, and anthem
 	function updateCountry() {
 		
-		$("title").textContent = resources.name[current];
-		$("flag").src = resources.flag[current];
+//		$("title").textContent = resources.name[current];
+//		$("flag").src = resources.flag[current];
 		
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
 		timer.setCountry(current);
 		timer.reset();
 		
-		updateTimer();
-		if (timerDisplay) clearInterval(timerDisplay);
-		timerDisplay = setInterval(updateTimer, 1000);
+		updateBank();
+		
+//		updateTimer();
+//		if (timerDisplay) clearInterval(timerDisplay);
+//		timerDisplay = setInterval(updateTimer, 1000);
 		
 	}
 	// displays the current time to the screen
@@ -169,10 +188,13 @@
 	function updateBank() {
 		for (let i = 0; i < order.length; i++) {
 			let country = order[i];
-			let balanceDOM = qs("#" + country + " .balance");
-			let incomeDOM = qs("#" + country + " .income");
+			let balanceDOM = $("sidebar").contentDocument.querySelector
+				("#" + country + " .balance");
+			let incomeDOM = $("sidebar").contentDocument.querySelector
+				("#" + country + " .income");
 			bank.display(balanceDOM, incomeDOM, country);
 		}
+		bank.display($("balance"), $("income"), current);
 	}
 	
 	// goes to the next country's turn

@@ -2,8 +2,9 @@ body {
 	margin: 0px;
 	display: flex;
 	overflow: hidden;
-	border-color: #E2A432;
-	background-color: #E2A432;
+	color: white;
+	border-color: white;
+	background-color: white;
 }
 
 #sidebar {
@@ -18,8 +19,28 @@ body {
 }
 
 #main {
-	border: 3vh solid;
-	border-color: inherit;
+	width: 60%;
+	text-align: center;
+	display: flex;
+	flex-flow: column nowrap;
+	overflow: scroll;
+	justify-content: flex-start;
+	align-content: center;
+}
+
+#main > * {
 	background-color: white;
-	width: 60%
+	margin: 3vh;
+	border-radius: 3vw;
+}
+
+#bank {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+
+#bank h1 {
+	margin: 1vh 2vw;
+	font-size: 4vw;
 }
