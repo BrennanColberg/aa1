@@ -1,0 +1,10 @@
+body {
+	margin: 0px;
+}
+
+#sidebar {
+	border: 0px;
+	height: 100vh;
+	overflow: scroll;
+	width: 40%;
+}

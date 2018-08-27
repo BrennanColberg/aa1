@@ -38,15 +38,3 @@ table {
 	margin: 1vw;
 	font-size: 6vw;
 }
-
-.selected .left {
-	width: 80vw;
-	justify-content: center;
-}
-.selected .flag {
-	border: 20px solid;
-	border-radius: 20px;
-}
-.selected .right {
-	display: none;
-}

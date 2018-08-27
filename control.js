@@ -32,6 +32,7 @@
 		$("control").onclick = start;
 		$("resume").onclick = function() { 
 			if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
+			if (cookieExists("bank")) { bank.load(loadCookie("bank")); }
 			if (cookieExists("current")) { current = loadCookie("current"); }
 			start();
 		}
@@ -63,6 +64,7 @@
 	// saves game state, in various JSON files, into the cookies
 	function save() {
 		saveCookie("current", current);
+		saveCookie("bank", bank.save());
 		saveCookie("timer", timer.save());
 	}
 	
