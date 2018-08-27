@@ -68,7 +68,7 @@
 		saveCookie("timer", timer.save());
 	}
 	
-	// generates HTML structure!
+	// generates HTML structure! code is hella ugly tho
 	function generateStructure() {
 		let table = qs("table");
 		for (let i = 0; i < order.length; i++) {

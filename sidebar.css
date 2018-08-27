@@ -6,6 +6,7 @@ body {
 table {
 	padding: 0px;
 	width: 100vw;
+	border-spacing: 4vw;
 }
 
 .left {
@@ -13,6 +14,8 @@ table {
 	justify-content: right;
 	align-items: center;
 	height: auto;
+	border-top-left-radius: 4vw;
+	border-top-right-radius: 4vw;
 }
 .left h1 {
 	font-size: 12vw;
@@ -29,12 +32,29 @@ table {
 }
 
 .right {
-	border: 1vw solid;
+	border: 1.5vw solid;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	background-color: white;
+	border-bottom-left-radius: 4vw;
+	border-bottom-right-radius: 4vw;
 }
 .right h2 {
 	margin: 1vw;
 	font-size: 6vw;
+}
+
+.selected .left {
+	padding: 2vh 0px;
+	justify-content: center;
+}
+.selected .left h1 {
+	font-size: 25vw;
+}
+.selected .flag {
+	display: none;
+}
+.selected .right {
+	display: none;
 }

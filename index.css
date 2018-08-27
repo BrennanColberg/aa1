@@ -1,10 +1,25 @@
 body {
 	margin: 0px;
+	display: flex;
+	overflow: hidden;
+	border-color: #E2A432;
+	background-color: #E2A432;
 }
 
 #sidebar {
 	border: 0px;
-	height: 100vh;
+	height: 94vh;
 	overflow: scroll;
 	width: 40%;
+	border: 3vh solid;
+	border-right: 0px;
+	border-color: inherit;
+	background-color: inherit;
+}
+
+#main {
+	border: 3vh solid;
+	border-color: inherit;
+	background-color: white;
+	width: 60%
 }
