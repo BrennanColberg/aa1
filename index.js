@@ -31,7 +31,7 @@
 		else { ajaxGET("save/bank.json", bank.load); }
 		ajaxGET("resources/order.json", loadOrder);
 		if (cookieExists("current")) { loadCurrent(JSON.stringify(loadCookie("current"))); }
-		else { ajaxGET("default.json", loadCurrent); }
+		else { ajaxGET("save/current.json", loadCurrent); }
 		ajaxGET("resources/index.json", loadResources);
 		
 		console.log($("next"));

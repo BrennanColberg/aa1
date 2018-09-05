@@ -8,7 +8,7 @@
 
 	<body style="text-align: center">
 		<script type="text/javascript">
-			ajaxGET("map/1942/layout.json", function(json) {
+			ajaxGET("../map/1942/layout.json", function(json) {
 				let data = JSON.parse(json);
 				console.log(data.territories);
 				let territories = data.territories;

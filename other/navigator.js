@@ -5,7 +5,7 @@
 	
 	window.addEventListener("load", function() {
 		
-		ajaxGET("map/1942/layout.json", loadLayout);
+		ajaxGET("../map/1942/layout.json", loadLayout);
 		
 	});
 	
