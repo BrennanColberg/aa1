@@ -110,6 +110,7 @@
 		start();
 	}
 	
+	// update info due to a new country being selected
 	function select() {
 		this.className = "selected";
 		let id = this.id;
@@ -118,7 +119,7 @@
 		body.style.borderColor = resources.color[id];
 		body.style.backgroundColor = resources.color[id];
 		for (let i = 0; i < this.parentElement.childElementCount; i++) {
-			let node = this.parentElement.childNodes[i]
+			let node = this.parentElement.childNodes[i];
 			if (node !== this) {
 				node.classList.remove("selected");
 			}
@@ -191,7 +192,7 @@
 	// tracks key presses and lets them do things
 	function pressKey(event) {
 		let key = event.keyCode;
-		if (key === 32) {
+		if (key === 32) { // spacebar -> next country
 			$("next").click();
 		}
 	}
