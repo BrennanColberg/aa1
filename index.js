@@ -22,6 +22,8 @@
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		
+		$("withdraw").onclick = withdraw;
+		$("deposit").onclick = deposit;
 		$("next").onclick = next;
 		
 		// AJAX setup
@@ -38,7 +40,11 @@
 		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
 		window.addEventListener("blur", save);
+		
 	});
+	
+	
+	/***** FILE I/O (LOADING, SAVING) *****/
 	
 	// loads the gameplay order, succession of countries
 	function loadOrder(json) {
@@ -61,7 +67,6 @@
 		saveCookie("bank", bank.save());
 		saveCookie("timer", timer.save());
 	}
-	
 	// generates HTML structure! code is hella ugly tho
 	function generateStructure() {
 		let table = $("sidebar").contentDocument.querySelector("table");
@@ -107,47 +112,9 @@
 		start();
 	}
 	
-	// update info due to a new country being selected
-	function select() {
-		this.className = "selected";
-		let id = this.id;
-		let body = qs("body");
-		body.style.setProperty("--current-color", resources.color[id]);
-		for (let i = 0; i < this.parentElement.childElementCount; i++) {
-			let node = this.parentElement.children[i];
-			if (node !== this) {
-				node.classList.remove("selected");
-			}
-		}
-		current = id;
-		start();
-	}
-	// starts/resumes/"play"s the game (starts timer, starts music)
-	function play() {
-		anthemPlayer.play();
-		timer.play();
-	}
-	// pauses the game (stops timer, stops music, etc)
-	function pause() {
-		anthemPlayer.pause();
-		timer.pause();
-	}
 	
-	// loads the current country's name, flag, and anthem
-	function start() {
-		
-		anthemPlayer.setFile(resources.anthem[current]);
-		anthemPlayer.start();
-		timer.setCountry(current);
-		timer.reset();
-		
-		updateBank();
-		//updateTimer();
-		
-		//if (timerDisplay) clearInterval(timerDisplay);
-		//timerDisplay = setInterval(updateTimer, 1000);
-		
-	}
+	/***** GRAPHICAL CHANGES & UPDATING *****/
+	
 	// displays the current time to the screen
 	function updateTimer() {
 		$("currentTime").textContent = timer.displayString(timer.current());
@@ -167,24 +134,77 @@
 		$("income").textContent = bank.income(current);
 	}
 	
+	
+	/***** GAME FLOW (COUNTRY PROGRESSION) *****/
+	
+	// update info due to a new country being selected
+	function select() {
+		this.className = "selected";
+		let id = this.id;
+		let body = qs("body");
+		body.style.setProperty("--current-color", resources.color[id]);
+		for (let i = 0; i < this.parentElement.childElementCount; i++) {
+			let node = this.parentElement.children[i];
+			if (node !== this) {
+				node.classList.remove("selected");
+			}
+		}
+		current = id;
+		start();
+	}
+	// loads the current country's name, flag, and anthem
+	function start() {
+		anthemPlayer.setFile(resources.anthem[current]);
+		anthemPlayer.start();
+		timer.setCountry(current);
+		timer.reset();
+		updateBank();
+		//updateTimer();
+		//if (timerDisplay) clearInterval(timerDisplay);
+		//timerDisplay = setInterval(updateTimer, 1000);
+	}
+//	// starts/resumes/"play"s the game (starts timer, starts music)
+//	function play() {
+//		anthemPlayer.play();
+//		timer.play();
+//	}
+//	// pauses the game (stops timer, stops music, etc)
+//	function pause() {
+//		anthemPlayer.pause();
+//		timer.pause();
+//	}
+	
+	
+	/***** BUTTON I/O (BANKING, ETC) ****/
+	
+	function withdraw() {
+		let amount = this.parentElement.querySelector("input").value;
+		bank.withdraw(amount, current);
+		updateBank();
+	}
+	
+	function deposit() {
+		let amount = this.parentElement.querySelector("input").value;
+		bank.deposit(amount, current);
+		updateBank();
+	}
+	
 	// goes to the next country's turn
 	function next() {
+		// standard method for wrapping numbers (confines to boundaries
+		// but then adds excess in a periodic fashion)
+		function wrap(num, min, max) {
+			let r = max - min + 1;
+			while(num > max) num -= r;
+			while(num < min) num += r;
+			return num;
+		}
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
 		sidebar[current].click();
  	}
-	// goes to the last country's turn
-	function last() {
-		current = order[wrap(order.indexOf(current) - 1, 0, order.length - 1)];
-		sidebar[current].click();
- 	}
-	// standard method for wrapping numbers (confines to boundaries
-	// but then adds excess in a periodic fashion)
-	function wrap(num, min, max) {
-		let r = max - min + 1;
-		while(num > max) num -= r;
-		while(num < min) num += r;
-		return num;
-	}
+	
+	
+	/***** KEYBOARD SHORTCUTS *****/
 	
 	// tracks key presses and lets them do things
 	function pressKey(event) {

@@ -35,6 +35,11 @@ body {
 	border-radius: 3vw;
 }
 
+#bank-io * {
+	color: inherit;
+	display: inline-block;
+}
+
 #bank {
 	display: flex;
 	flex-flow: row wrap;

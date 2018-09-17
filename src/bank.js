@@ -41,8 +41,8 @@ function Bank() {
 	}
 	// adds money to the [current / given] country's balance
 	this.deposit = function(amount, country = current) {
-		if (!balance[country]) this.clear(country);
-		balance[country] += amount;
+		// if done with += it appends the character for some odd reason
+		this.withdraw(-amount, country);
 	}
 	// subtracts money from the [current / given] country's balance
 	this.withdraw = function(amount, country = current) {
