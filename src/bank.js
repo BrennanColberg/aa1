@@ -51,7 +51,7 @@ function Bank() {
 	}
 	
 	this.collectIncome = function(country) {
-		this.deposit(country, income(country));
+		this.deposit(country, this.income(country));
 	}
 	
 }

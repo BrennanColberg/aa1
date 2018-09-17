@@ -205,6 +205,7 @@
 			while(num < min) num += r;
 			return num;
 		}
+		bank.collectIncome(current);
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
 		sidebar[current].click();
  	}
