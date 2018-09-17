@@ -1,17 +1,20 @@
-const MEASURED_TIME_INTERVAL = 1000;
+// This JavaScript object keeps track of how much time each player takes during
+// their turn!
 
 function Timer() {
+	
+	const MEASURED_TIME_INTERVAL = 1000;
 	
 	let overall = undefined;
 	let current = 0;
 	let country = undefined;
 	let ticker = undefined;
-	let cDOM = undefined, oDOM = undefined;
 	
-	// saving/loading data
+	// loads data from JSON format
 	this.load = function(json) {
 		overall = JSON.parse(json);
 	}
+	// saves data to JSON format
 	this.save = function() {
 		return JSON.stringify(overall);
 	}
@@ -32,9 +35,11 @@ function Timer() {
 		if (ticker) this.pause();
 		ticker = setInterval(this.update, MEASURED_TIME_INTERVAL);
 	}
+	// pauses the timer
 	this.pause = function() {
 		clearInterval(ticker);
 	}
+	// updates the timer of the current country
 	this.update = function() {
 		current += MEASURED_TIME_INTERVAL;
 		overall[country] += MEASURED_TIME_INTERVAL;

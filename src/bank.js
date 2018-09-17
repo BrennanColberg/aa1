@@ -1,14 +1,20 @@
+// This JavaScript file functions to keep track of the balances of each nation,
+// allowing additions and deposits and giving information about balances, etc
+// (if it has to do with money, it's here)
+
 function Bank() {
 	
 	let balance = {};
 	let income = {};
 	let current = undefined;
 	
+	// loads bank data from a JSON data object
 	this.load = function(json) {
 		let data = JSON.parse(json);
 		balance = data["balance"];
 		income = data["income"];
 	}
+	// loads current data into a JSON data object
 	this.save = function() {
 		return JSON.stringify({
 			"balance": balance,
@@ -16,25 +22,31 @@ function Bank() {
 		});
 	}
 	
+	// sets the current country's turn
 	this.setCountry = function(country) {
 		current = country;
 	}
 	
+	// clears the [current / given] country's balance
 	this.clear = function(country = current) {
 		balance[country] = 0;
 	}
+	// returns the [current / given] country's balance
 	this.balance = function(country = current) {
 		return balance[country];
 	}
+	// adds money to the [current / given] country's balance
 	this.deposit = function(amount, country = current) {
 		if (!balance[country]) this.clear(country);
 		balance[country] += amount;
 	}
+	// subtracts money from the [current / given] country's balance
 	this.withdraw = function(amount, country = current) {
 		if (!balance[country]) this.clear(country);
 		balance[country] -= amount;
 	}
 	
+	// displays the current country's balance to given DOM objects' textContent
 	this.display = function(balanceDOM, incomeDOM, country = current) {
 		balanceDOM.textContent = balance[country];
 		incomeDOM.textContent = income[country];

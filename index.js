@@ -34,8 +34,6 @@
 		else { ajaxGET("save/current.json", loadCurrent); }
 		ajaxGET("resources/index.json", loadResources);
 		
-		console.log($("next"));
-		
 		// adds more event listeners (for saving, keys, etc)
 		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
@@ -115,11 +113,9 @@
 		this.className = "selected";
 		let id = this.id;
 		let body = qs("body");
-		body.style.color = resources.color[id];
-		body.style.borderColor = resources.color[id];
-		body.style.backgroundColor = resources.color[id];
+		body.style.setProperty("--current-color", resources.color[id]);
 		for (let i = 0; i < this.parentElement.childElementCount; i++) {
-			let node = this.parentElement.childNodes[i];
+			let node = this.parentElement.children[i];
 			if (node !== this) {
 				node.classList.remove("selected");
 			}

@@ -25,7 +25,7 @@ function AnthemPlayer() {
 			dom.onloadedmetadata = function() {
 				console.log(dom.duration);
 				dom.currentTime = (time / 1000.0) % dom.duration;
-				dom.play();
+				dom.play(); // gets blocked by Safari as an auto-player
 			}
 		}
 	}
