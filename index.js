@@ -182,7 +182,7 @@
 	function withdraw(amount) {
 		if (typeof amount !== "number")
 			amount = this.parentElement.querySelector("input").value;
-		bank.withdraw(amount, current);
+		bank.withdraw(current, amount);
 		updateBank();
 	}
 	
@@ -191,7 +191,7 @@
 	function deposit(amount) {
 		if (typeof amount !== "number")
 			amount = this.parentElement.querySelector("input").value;
-		bank.deposit(amount, current);
+		bank.deposit(current, amount);
 		updateBank();
 	}
 	
