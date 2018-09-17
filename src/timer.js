@@ -45,13 +45,17 @@ function Timer() {
 		overall[country] += MEASURED_TIME_INTERVAL;
 	}
 	
-	// takes in DOM objects and puts the current and total time into them
-	this.display = function(currentDOM, overallDOM) {
-		currentDOM.textContent = this.toString(current);
-		overallDOM.textContent = this.toString(overall[country]);
+	// returns the current time
+	this.current = function() {
+		return current;
 	}
+	// returns the overall time for current country
+	this.overall = function() {
+		return overall[country];
+	}
+	
 	// turns an int millisecond measurement into a 00:00:00 clock string
-	this.toString = function(time) {
+	this.displayString = function(time) {
 		let result = "";
 		time = Math.floor(time);
 		let seconds = 	Math.floor(time / 1000) % 60;

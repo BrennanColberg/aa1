@@ -35,6 +35,10 @@ function Bank() {
 	this.balance = function(country = current) {
 		return balance[country];
 	}
+	// returns the [current / given] country's income
+	this.income = function(country = current) {
+		return income[country];
+	}
 	// adds money to the [current / given] country's balance
 	this.deposit = function(amount, country = current) {
 		if (!balance[country]) this.clear(country);
@@ -44,12 +48,6 @@ function Bank() {
 	this.withdraw = function(amount, country = current) {
 		if (!balance[country]) this.clear(country);
 		balance[country] -= amount;
-	}
-	
-	// displays the current country's balance to given DOM objects' textContent
-	this.display = function(balanceDOM, incomeDOM, country = current) {
-		balanceDOM.textContent = balance[country];
-		incomeDOM.textContent = income[country];
 	}
 	
 }

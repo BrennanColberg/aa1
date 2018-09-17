@@ -38,7 +38,6 @@
 		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
 		window.addEventListener("blur", save);
-		
 	});
 	
 	// loads the gameplay order, succession of countries
@@ -151,19 +150,21 @@
 	}
 	// displays the current time to the screen
 	function updateTimer() {
-		timer.display($("currentTime"), $("totalTime"));
+		$("currentTime").textContent = timer.displayString(timer.current());
+		$("overallTime").textContent = timer.displayString(timer.overall());
 	}
 	// displays the current balances to the screen
 	function updateBank() {
+		let sidebar = $("sidebar").contentDocument;
 		for (let i = 0; i < order.length; i++) {
 			let country = order[i];
-			let balanceDOM = $("sidebar").contentDocument.querySelector
-				("#" + country + " .balance");
-			let incomeDOM = $("sidebar").contentDocument.querySelector
-				("#" + country + " .income");
-			bank.display(balanceDOM, incomeDOM, country);
+			let balanceDOM = sidebar.querySelector("#" + country + " .balance");
+			let incomeDOM = sidebar.querySelector("#" + country + " .income");
+			balanceDOM.textContent = bank.balance(country);
+			incomeDOM.textContent = bank.income(country);
 		}
-		bank.display($("balance"), $("income"), current);
+		$("balance").textContent = bank.balance(current);
+		$("income").textContent = bank.income(current);
 	}
 	
 	// goes to the next country's turn
