@@ -177,14 +177,20 @@
 	
 	/***** BUTTON I/O (BANKING, ETC) ****/
 	
-	function withdraw() {
-		let amount = this.parentElement.querySelector("input").value;
+	// withdraws from the current country's bank an amount of money
+	// can be called either by a button in the I/O or by a call with amount arg
+	function withdraw(amount) {
+		if (typeof amount !== "number")
+			amount = this.parentElement.querySelector("input").value;
 		bank.withdraw(amount, current);
 		updateBank();
 	}
 	
-	function deposit() {
-		let amount = this.parentElement.querySelector("input").value;
+	// deposits to the current country's bank an amount of money
+	// can be called either by a button in the I/O or by a call with amount arg
+	function deposit(amount) {
+		if (typeof amount !== "number")
+			amount = this.parentElement.querySelector("input").value;
 		bank.deposit(amount, current);
 		updateBank();
 	}

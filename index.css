@@ -38,6 +38,11 @@ body {
 #bank-io * {
 	color: inherit;
 	display: inline-block;
+	font-size: 2vw;
+}
+#bank-io p {
+	font-size: 2.5vw;
+	font-weight: bold;
 }
 
 #bank {
