@@ -65,10 +65,13 @@
 	}
 	// loads units to the selling place
 	function loadUnits(json) {
-		console.log("loading units");
 		let data = JSON.parse(json);
-		let process = function(data, id) {
-			let dom = $(id);
+		let unitTypes = Object.keys(data);
+		for (let c = 0; c < unitTypes.length; c++) {
+			let id = unitTypes[c];
+			let dom = ce("section");
+			dom.id = id;
+			$("units").appendChild(dom);
 			for (let i = 0; i < data[id].length; i++) {
 				let item = data[id][i];
 				let p = ce("p");
@@ -78,9 +81,6 @@
 				dom.appendChild(p);
 			}
 		}
-		process(data, "land");
-		process(data, "air");
-		process(data, "sea");
 	}
 	// saves game state, in various JSON files, into the cookies
 	function save() {

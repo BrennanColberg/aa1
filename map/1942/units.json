@@ -14,5 +14,11 @@
 		{ "name": "Destroyer", "cost": 12, "attack": 3, "defense": 3, "move": 2 },
 		{ "name": "Carrier", "cost": 16, "attack": 1, "defense": 3, "move": 2 },
 		{ "name": "Battleship", "cost": 24, "attack": 4, "defense": 4, "move": 2 }
+	],
+	"other": [
+		{ "name": "Upgrade", "cost": 5 },
+		{ "name": "AA Gun", "cost": 6 },
+		{ "name": "Factory", "cost": 15 },
+		{ "name": "Repair", "cost": 1 }
 	]
 }
