@@ -11,19 +11,21 @@
 	// declaring module-global variables
 	let current = undefined;
 	let order = undefined;
-	let defaultState = undefined;
 	let resources = undefined;
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
 	let bank = new Bank();
 	let timerDisplay = undefined;
 	let sidebar = [];
+	let unitCart = [];
+	let unitCartPrice = 0;
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		
 		$("withdraw").onclick = withdraw;
 		$("deposit").onclick = deposit;
+		$("checkout").onclick = checkout;
 		$("next").onclick = next;
 		
 		// AJAX setup
@@ -75,7 +77,7 @@
 			for (let i = 0; i < data[id].length; i++) {
 				let item = data[id][i];
 				let p = ce("p");
-				p.onclick = buyUnit;
+				p.onclick = takeUnit;
 				p.cost = item.cost;
 				p.name = p.textContent = item.name;
 				dom.appendChild(p);
@@ -141,6 +143,7 @@
 		$("currentTime").textContent = timer.displayString(timer.current());
 		$("overallTime").textContent = timer.displayString(timer.overall());
 	}
+	
 	// displays the current balances to the screen
 	function updateBank() {
 		let sidebar = $("sidebar").contentDocument;
@@ -155,6 +158,17 @@
 		$("income").textContent = bank.income(current);
 	}
 	
+	// displays the current cart to the screen (contents and price)
+	function updateCart() {
+		let cart = $("cartContents");
+		while (cart.firstChild) cart.removeChild(cart.firstChild);
+		let price = 0;
+		for (let i = 0; i < unitCart.length; i++) {
+			$("cartContents").appendChild(unitCart[i]);
+			price += unitCart[i].cost;
+		}
+		$("cartPrice").textContent = unitCartPrice = price;
+	}
 	
 	/***** GAME FLOW (COUNTRY PROGRESSION) *****/
 	
@@ -175,6 +189,8 @@
 	}
 	// loads the current country's name, flag, and anthem
 	function start() {
+		unitCart = [];
+		updateCart();
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
 		timer.setCountry(current);
@@ -216,12 +232,35 @@
 		updateBank();
 	}
 	
-	// used to purchase a unit; triggered when that unit is clicked in the
-	// units purchase section onscreen
-	function buyUnit() {
-		if (this.cost <= bank.balance(current)) {
-			withdraw(this.cost);
+	// called by a unit in the selection menu when clicked; adds a copy of it
+	// to the cart
+	function takeUnit() {
+		if (this.cost + unitCartPrice <= bank.balance(current)) {
+			let unit = this.cloneNode(true);
+			unit.onclick = returnUnit;
+			unit.cost = this.cost;
+			unit.name = this.name;
+			unitCart.push(unit);
+			updateCart();
 		}
+	}
+	
+	// called by a unit in the cart when clicked; removes it from the cart
+	function returnUnit() {
+		unitCart.splice(unitCart.indexOf(this), 1);
+		updateCart();
+	}
+	
+	// purchases every unit currently in the cart
+	function checkout() {
+		for (let i = unitCart.length - 1; i >= 0; i--) {
+			let unit = unitCart[i];
+			if (unit.cost <= bank.balance(current)) {
+				withdraw(unit.cost);
+				unitCart.splice(i, 1);
+			}
+		}
+		updateCart();
 	}
 	
 	// goes to the next country's turn

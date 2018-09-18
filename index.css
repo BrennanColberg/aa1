@@ -69,6 +69,17 @@ body {
 	cursor: pointer;
 }
 
+#cartContents {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+}
+
+#cartContents > * {
+	margin: 0.5vw 1vw;
+	display: block;
+}
+
 #bank {
 	display: flex;
 	flex-flow: row wrap;
