@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Axis &amp; Allies</title>
 		<link href="index.css" rel="stylesheet" />
-		<script type="text/javascript" src="https://brennancolberg.github.io/abbr/js/cookie.js"></script>
-		<script type="text/javascript" src="https://brennancolberg.github.io/abbr/js/ajax.js"></script>
+		<script src="src/io.js"></script>
 		<script src="src/timer.js"></script>
 		<script src="src/bank.js"></script>
 		<script src="src/anthemPlayer.js"></script>
@@ -12,6 +12,12 @@
 	<body>
 		<iframe id="sidebar" src="sidebar.html"></iframe>
 		<div id="main">
+			<div id="timer">
+				<h1>
+					<span id="currentTime">00:00:00</span>
+					(<span id="overallTime">00:00:00</span> total)
+				</h1>
+			</div>
 			<div id="bank">
 				<h1>Balance: <span id="balance"></span></h1>
 				<h1>Income: <span id="income"></span></h1>
@@ -37,7 +43,7 @@
 				</button>
 				<div id="cartContents"></div>
 			</div>
-			<button id="next">Next Country	</button>
+			<button id="next">End Turn</button>
 		</div>
 	</body>
 </html>

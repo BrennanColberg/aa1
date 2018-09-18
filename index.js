@@ -132,6 +132,8 @@
 			table.appendChild(row);
 			sidebar[country] = row;
 		}
+		// starts game as first country in line
+		table.children[0].click();
 		start();
 	}
 	
@@ -189,30 +191,32 @@
 	}
 	// loads the current country's name, flag, and anthem
 	function start() {
+    // resets cart
 		unitCart = [];
 		updateCart();
+		// updates anthem to current country
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
+		// updates the bank to show current country's info
+		updateBank();
+		// resets the timer and sets it to count for the current country
 		timer.setCountry(current);
 		timer.reset();
-		updateBank();
-		//updateTimer();
-		//if (timerDisplay) clearInterval(timerDisplay);
-		//timerDisplay = setInterval(updateTimer, 1000);
+		// displays the timer's value (and sets up another timer to regularly
+		// update said value)
+		updateTimer();
+		if (timerDisplay) clearInterval(timerDisplay);
+		timerDisplay = setInterval(updateTimer, 1000);
 	}
-//	// starts/resumes/"play"s the game (starts timer, starts music)
-//	function play() {
-//		anthemPlayer.play();
-//		timer.play();
-//	}
-//	// pauses the game (stops timer, stops music, etc)
-//	function pause() {
-//		anthemPlayer.pause();
-//		timer.pause();
-//	}
-	
-	
-	/***** BUTTON I/O (BANKING, ETC) ****/
+  
+	// displays the current timer info to the screen
+	function updateTimer() {
+		$("currentTime").textContent = timer.displayString(timer.current());
+		$("overallTime").textContent = timer.displayString(timer.overall());
+  }
+
+
+  /***** BUTTON I/O (BANKING, ETC) ****/
 	
 	// withdraws from the current country's bank an amount of money
 	// can be called either by a button in the I/O or by a call with amount arg
