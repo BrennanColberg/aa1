@@ -137,20 +137,21 @@
 	
 	// loads the current country's name, flag, and anthem
 	function start() {
-		
+		// updates anthem to current country
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
+		// updates the bank to show current country's info
+		updateBank();
+		// resets the timer and sets it to count for the current country
 		timer.setCountry(current);
 		timer.reset();
-		
-		updateBank();
-		//updateTimer();
-		
-		//if (timerDisplay) clearInterval(timerDisplay);
-		//timerDisplay = setInterval(updateTimer, 1000);
-		
+		// displays the timer's value (and sets up another timer to regularly
+		// update said value)
+		updateTimer();
+		if (timerDisplay) clearInterval(timerDisplay);
+		timerDisplay = setInterval(updateTimer, 1000);
 	}
-	// displays the current time to the screen
+	// displays the current timer info to the screen
 	function updateTimer() {
 		$("currentTime").textContent = timer.displayString(timer.current());
 		$("overallTime").textContent = timer.displayString(timer.overall());
