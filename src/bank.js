@@ -4,50 +4,54 @@
 
 function Bank() {
 	
-	let balance = {};
-	let income = {};
-	let current = undefined;
+	let balanceData = {};
+	let incomeData = {};
 	
 	// loads bank data from a JSON data object
 	this.load = function(json) {
 		let data = JSON.parse(json);
-		balance = data["balance"];
-		income = data["income"];
+		balanceData = data["balance"];
+		incomeData = data["income"];
 	}
+	
 	// loads current data into a JSON data object
 	this.save = function() {
 		return JSON.stringify({
-			"balance": balance,
-			"income": income
+			"balance": balanceData,
+			"income": incomeData
 		});
 	}
 	
-	// sets the current country's turn
-	this.setCountry = function(country) {
-		current = country;
+	// gets or sets the given country's balance
+	this.balance = function(country, amount) {
+		if (amount !== undefined) {
+			balanceData[country] = amount < 0 ? 0 : amount;
+		} else {
+			return balanceData[country];
+		}
 	}
 	
-	// clears the [current / given] country's balance
-	this.clear = function(country = current) {
-		balance[country] = 0;
+	// gets or sets the given country's income
+	this.income = function(country, amount) {
+		if (amount !== undefined) {
+			incomeData[country] = amount < 0 ? 0 : amount;
+		} else {
+			return incomeData[country];
+		}
 	}
-	// returns the [current / given] country's balance
-	this.balance = function(country = current) {
-		return balance[country];
+	
+	// adds money to the given country's balance
+	this.deposit = function(country, amount) {
+		this.balance(country, this.balance(country) + Number(amount));
 	}
-	// returns the [current / given] country's income
-	this.income = function(country = current) {
-		return income[country];
+	
+	// subtracts money from the given country's balance
+	this.withdraw = function(country, amount) {
+		this.balance(country, this.balance(country) - Number(amount));
 	}
-	// adds money to the [current / given] country's balance
-	this.deposit = function(amount, country = current) {
-		if (!balance[country]) this.clear(country);
-		balance[country] += amount;
-	}
-	// subtracts money from the [current / given] country's balance
-	this.withdraw = function(amount, country = current) {
-		if (!balance[country]) this.clear(country);
-		balance[country] -= amount;
+	
+	this.collectIncome = function(country) {
+		this.deposit(country, this.income(country));
 	}
 	
 }

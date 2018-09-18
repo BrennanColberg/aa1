@@ -35,6 +35,65 @@ body {
 	border-radius: 3vw;
 }
 
+#bank-io * {
+	color: inherit;
+	display: inline-block;
+	font-size: 2vw;
+}
+#bank-io p {
+	font-size: 2.5vw;
+	font-weight: bold;
+}
+
+#units {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	font-size: 2vw;
+	border: 0.75vw solid var(--current-color);
+	margin: 0.75vw;
+	border-radius: 3vw;
+}
+
+#units section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 1vw 0.5vw;
+}
+
+#units p {
+	margin: 0vw 0.25vw;
+}
+
+#units p:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#cart button {
+	font-size: 2.5vw;
+	border-radius: 3vw; 
+	background-color: var(--current-color);
+	color: white;
+	border: none;
+	margin: 1vw;
+}
+
+#cartContents {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	font-size: 2vw;
+	margin: 0vw 2vw 1vw 2vw;
+}
+
+#cartContents > * {
+	margin: 0.5vw 1vw;
+	display: block;
+}
+
 #bank {
 	display: flex;
 	flex-flow: row wrap;

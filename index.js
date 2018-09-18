@@ -11,17 +11,21 @@
 	// declaring module-global variables
 	let current = undefined;
 	let order = undefined;
-	let defaultState = undefined;
 	let resources = undefined;
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
 	let bank = new Bank();
 	let timerDisplay = undefined;
 	let sidebar = [];
+	let unitCart = [];
+	let unitCartPrice = 0;
 	
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		
+		$("withdraw").onclick = withdraw;
+		$("deposit").onclick = deposit;
+		$("checkout").onclick = checkout;
 		$("next").onclick = next;
 		
 		// AJAX setup
@@ -34,11 +38,17 @@
 		else { ajaxGET("save/current.json", loadCurrent); }
 		ajaxGET("resources/index.json", loadResources);
 		
+		ajaxGET("map/1942/units.json", loadUnits);
+		
 		// adds more event listeners (for saving, keys, etc)
 		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
 		window.addEventListener("blur", save);
+		
 	});
+	
+	
+	/***** FILE I/O (LOADING, SAVING) *****/
 	
 	// loads the gameplay order, succession of countries
 	function loadOrder(json) {
@@ -55,13 +65,31 @@
 		resources = JSON.parse(json);
 		if (order && current) generateStructure();
 	}
+	// loads units to the selling place
+	function loadUnits(json) {
+		let data = JSON.parse(json);
+		let unitTypes = Object.keys(data);
+		for (let c = 0; c < unitTypes.length; c++) {
+			let id = unitTypes[c];
+			let dom = ce("section");
+			dom.id = id;
+			$("units").appendChild(dom);
+			for (let i = 0; i < data[id].length; i++) {
+				let item = data[id][i];
+				let p = ce("p");
+				p.onclick = takeUnit;
+				p.cost = item.cost;
+				p.name = p.textContent = item.name;
+				dom.appendChild(p);
+			}
+		}
+	}
 	// saves game state, in various JSON files, into the cookies
 	function save() {
 		saveCookie("current", current);
 		saveCookie("bank", bank.save());
 		saveCookie("timer", timer.save());
 	}
-	
 	// generates HTML structure! code is hella ugly tho
 	function generateStructure() {
 		let table = $("sidebar").contentDocument.querySelector("table");
@@ -109,6 +137,43 @@
 		start();
 	}
 	
+	
+	/***** GRAPHICAL CHANGES & UPDATING *****/
+	
+	// displays the current time to the screen
+	function updateTimer() {
+		$("currentTime").textContent = timer.displayString(timer.current());
+		$("overallTime").textContent = timer.displayString(timer.overall());
+	}
+	
+	// displays the current balances to the screen
+	function updateBank() {
+		let sidebar = $("sidebar").contentDocument;
+		for (let i = 0; i < order.length; i++) {
+			let country = order[i];
+			let balanceDOM = sidebar.querySelector("#" + country + " .balance");
+			let incomeDOM = sidebar.querySelector("#" + country + " .income");
+			balanceDOM.textContent = bank.balance(country);
+			incomeDOM.textContent = bank.income(country);
+		}
+		$("balance").textContent = bank.balance(current);
+		$("income").textContent = bank.income(current);
+	}
+	
+	// displays the current cart to the screen (contents and price)
+	function updateCart() {
+		let cart = $("cartContents");
+		while (cart.firstChild) cart.removeChild(cart.firstChild);
+		let price = 0;
+		for (let i = 0; i < unitCart.length; i++) {
+			$("cartContents").appendChild(unitCart[i]);
+			price += unitCart[i].cost;
+		}
+		$("cartPrice").textContent = unitCartPrice = price;
+	}
+	
+	/***** GAME FLOW (COUNTRY PROGRESSION) *****/
+	
 	// update info due to a new country being selected
 	function select() {
 		this.className = "selected";
@@ -124,19 +189,11 @@
 		current = id;
 		start();
 	}
-	// starts/resumes/"play"s the game (starts timer, starts music)
-	function play() {
-		anthemPlayer.play();
-		timer.play();
-	}
-	// pauses the game (stops timer, stops music, etc)
-	function pause() {
-		anthemPlayer.pause();
-		timer.pause();
-	}
-	
 	// loads the current country's name, flag, and anthem
 	function start() {
+    // resets cart
+		unitCart = [];
+		updateCart();
 		// updates anthem to current country
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
@@ -151,43 +208,82 @@
 		if (timerDisplay) clearInterval(timerDisplay);
 		timerDisplay = setInterval(updateTimer, 1000);
 	}
+  
 	// displays the current timer info to the screen
 	function updateTimer() {
 		$("currentTime").textContent = timer.displayString(timer.current());
 		$("overallTime").textContent = timer.displayString(timer.overall());
+  }
+
+
+  /***** BUTTON I/O (BANKING, ETC) ****/
+	
+	// withdraws from the current country's bank an amount of money
+	// can be called either by a button in the I/O or by a call with amount arg
+	function withdraw(amount) {
+		if (typeof amount !== "number")
+			amount = this.parentElement.querySelector("input").value;
+		bank.withdraw(current, amount);
+		updateBank();
 	}
-	// displays the current balances to the screen
-	function updateBank() {
-		let sidebar = $("sidebar").contentDocument;
-		for (let i = 0; i < order.length; i++) {
-			let country = order[i];
-			let balanceDOM = sidebar.querySelector("#" + country + " .balance");
-			let incomeDOM = sidebar.querySelector("#" + country + " .income");
-			balanceDOM.textContent = bank.balance(country);
-			incomeDOM.textContent = bank.income(country);
+	
+	// deposits to the current country's bank an amount of money
+	// can be called either by a button in the I/O or by a call with amount arg
+	function deposit(amount) {
+		if (typeof amount !== "number")
+			amount = this.parentElement.querySelector("input").value;
+		bank.deposit(current, amount);
+		updateBank();
+	}
+	
+	// called by a unit in the selection menu when clicked; adds a copy of it
+	// to the cart
+	function takeUnit() {
+		if (this.cost + unitCartPrice <= bank.balance(current)) {
+			let unit = this.cloneNode(true);
+			unit.onclick = returnUnit;
+			unit.cost = this.cost;
+			unit.name = this.name;
+			unitCart.push(unit);
+			updateCart();
 		}
-		$("balance").textContent = bank.balance(current);
-		$("income").textContent = bank.income(current);
+	}
+	
+	// called by a unit in the cart when clicked; removes it from the cart
+	function returnUnit() {
+		unitCart.splice(unitCart.indexOf(this), 1);
+		updateCart();
+	}
+	
+	// purchases every unit currently in the cart
+	function checkout() {
+		for (let i = unitCart.length - 1; i >= 0; i--) {
+			let unit = unitCart[i];
+			if (unit.cost <= bank.balance(current)) {
+				withdraw(unit.cost);
+				unitCart.splice(i, 1);
+			}
+		}
+		updateCart();
 	}
 	
 	// goes to the next country's turn
 	function next() {
+		// standard method for wrapping numbers (confines to boundaries
+		// but then adds excess in a periodic fashion)
+		function wrap(num, min, max) {
+			let r = max - min + 1;
+			while(num > max) num -= r;
+			while(num < min) num += r;
+			return num;
+		}
+		bank.collectIncome(current);
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
 		sidebar[current].click();
  	}
-	// goes to the last country's turn
-	function last() {
-		current = order[wrap(order.indexOf(current) - 1, 0, order.length - 1)];
-		sidebar[current].click();
- 	}
-	// standard method for wrapping numbers (confines to boundaries
-	// but then adds excess in a periodic fashion)
-	function wrap(num, min, max) {
-		let r = max - min + 1;
-		while(num > max) num -= r;
-		while(num < min) num += r;
-		return num;
-	}
+	
+	
+	/***** KEYBOARD SHORTCUTS *****/
 	
 	// tracks key presses and lets them do things
 	function pressKey(event) {
