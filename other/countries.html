@@ -7,17 +7,22 @@
 	</head>
 
 	<body style="text-align: center">
-		<script type="text/javascript">
+		<script>
+			// uses layout.json
 			ajaxGET("../map/1942/layout.json", function(json) {
 				let data = JSON.parse(json);
+				// loads all territories
 				console.log(data.territories);
 				let territories = data.territories;
+				// lists all territory names in "names", and logs to console
 				let names = [];
 				for (let i in territories) {
 					names.push(territories[i].name);
 					console.log(territories[i].name);
 				}
+				// sorts names
 				names.sort();
+				// puts each sorted name into its own <p> on the main HTML page
 				for (let n in names) {
 					p = ce("p");
 					p.textContent = names[n];
