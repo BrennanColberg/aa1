@@ -36,6 +36,8 @@
 		else { ajaxGET("save/current.json", loadCurrent); }
 		ajaxGET("resources/index.json", loadResources);
 		
+		ajaxGET("map/1942/units.json", loadUnits);
+		
 		// adds more event listeners (for saving, keys, etc)
 		window.addEventListener("keydown", pressKey);
 		window.addEventListener("beforeunload", save);
@@ -60,6 +62,25 @@
 	function loadResources(json) {
 		resources = JSON.parse(json);
 		if (order && current) generateStructure();
+	}
+	// loads units to the selling place
+	function loadUnits(json) {
+		console.log("loading units");
+		let data = JSON.parse(json);
+		let process = function(data, id) {
+			let dom = $(id);
+			for (let i = 0; i < data[id].length; i++) {
+				let item = data[id][i];
+				let p = ce("p");
+				p.onclick = buyUnit;
+				p.cost = item.cost;
+				p.name = p.textContent = item.name;
+				dom.appendChild(p);
+			}
+		}
+		process(data, "land");
+		process(data, "air");
+		process(data, "sea");
 	}
 	// saves game state, in various JSON files, into the cookies
 	function save() {
@@ -193,6 +214,14 @@
 			amount = this.parentElement.querySelector("input").value;
 		bank.deposit(current, amount);
 		updateBank();
+	}
+	
+	// used to purchase a unit; triggered when that unit is clicked in the
+	// units purchase section onscreen
+	function buyUnit() {
+		if (this.cost <= bank.balance(current)) {
+			withdraw(this.cost);
+		}
 	}
 	
 	// goes to the next country's turn

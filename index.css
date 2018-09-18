@@ -45,6 +45,30 @@ body {
 	font-weight: bold;
 }
 
+#units {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	font-size: 2vw;
+}
+
+#units section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 1vw 0.5vw;
+}
+
+#units p {
+	margin: 0vw 0.25vw;
+}
+
+#units p:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 #bank {
 	display: flex;
 	flex-flow: row wrap;
