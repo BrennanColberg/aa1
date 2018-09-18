@@ -104,6 +104,8 @@
 			table.appendChild(row);
 			sidebar[country] = row;
 		}
+		// starts game as first country in line
+		table.children[0].click();
 		start();
 	}
 	
