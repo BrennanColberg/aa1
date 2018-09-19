@@ -4,16 +4,16 @@ function Map() {
 	let control = undefined;
 	let map = undefined;
 	
-	this.load = function(territoryJSON, mapSource) {
+	this.load = function(territoryJSON, mapSource, update) {
 		control = JSON.parse(territoryJSON);
 		ajaxGET(mapSource, function(json) {
 			map = JSON.parse(json);
+			update();
 		});
 	};
 	
 	// get a list of all territories a country owns
 	this.owned = function(country) {
-		console.log(control);
 		return control[country].sort();
 	};
 	
