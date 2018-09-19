@@ -170,14 +170,13 @@
 	}
 	
 	function updateTerritory() {
-		fillSelect(qs("#conquer select"), map.unowned(current));
-		fillSelect(qs("#lose select"), map.owned(current));
-		function fillSelect(dom, array) {
-			for (let i = 0; i < array.length; i++) {
-				let option = ce("option");
-				option.innerText = option.value = array[i];
-				dom.appendChild(option);
-			}
+		let dom = qs("#conquer select");
+		let array = map.conquerable(current);
+		while (dom.firstChild) dom.removeChild(dom.firstChild);
+		for (let i = 0; i < array.length; i++) {
+			let option = ce("option");
+			option.innerText = option.value = array[i];
+			dom.appendChild(option);
 		}
 	}
 	
@@ -260,7 +259,10 @@
 	}
 	
 	function conquer() {
-		console.log(map.unowned(current));
+		let territory = this.parentElement.querySelector("select").value;
+		map.conquer(current, territory, bank);
+		updateBank();
+		updateTerritory();
 	}
 	
 	// called by a unit in the selection menu when clicked; adds a copy of it
