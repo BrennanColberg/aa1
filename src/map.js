@@ -1,7 +1,8 @@
 
 function Map() {
 	
-	let territoryOwner = {};
+	let owner = {};
+	let start = {};
 	let map = undefined;
 	
 	this.load = function(territoryJSON, mapSource, update) {
@@ -12,12 +13,12 @@ function Map() {
 			let territories = countryToOwned[country];
 			for (let i = 0; i < territories.length; i++) {
 				let territory = territories[i];
-				territoryOwner[territory] = country;
+				owner[territory] = start[territory] = country;
+				
 			}
 		}
 		ajaxGET(mapSource, function(json) {
 			map = JSON.parse(json);
-			console.log(map);
 			update();
 		});
 	};
@@ -26,10 +27,10 @@ function Map() {
 	this.conquerable = function(country) {
 		if (map) {
 			let result = [];
-			let territoryNames = Object.keys(territoryOwner);
+			let territoryNames = Object.keys(owner);
 			for (let i = 0; i < territoryNames.length; i++) {
 				let territory = territoryNames[i];
-				if (map.alliances[territoryOwner[territory]] !==
+				if (map.alliances[owner[territory]] !==
 						map.alliances[country]) {
 					result.push(territory);
 				}
@@ -40,13 +41,32 @@ function Map() {
 	};
 	
 	this.conquer = function(country, territory, bank) {
-		// ownership
-		let otherCountry = territoryOwner[territory];
-		territoryOwner[territory] = country;
-		// income
+		let otherCountry = owner[territory];
+		// liberation (if from same alliance)
+		if (map.alliances[start[territory]] === map.alliances[country]) {
+			country = start[territory];
+		}
+		// capital takeover (if from different alliance and capital)
+		else if (map.territories[territory].capital) {
+			bank.adjustBalance(country, bank.balance(otherCountry));
+			bank.balance(otherCountry, 0);
+		}
+		// ownership transfer
+		owner[territory] = country;
+		// income adjustment
 		let territoryValue = map.territories[territory].value;
 		bank.adjustIncome(otherCountry, -territoryValue);
 		bank.adjustIncome(country, territoryValue);
+	}
+	
+	this.hasCapital = function(country) {
+		let territoryNames = Object.keys(map.territories);
+		for (let i = 0; i < territoryNames.length; i++) {
+			let name = territoryNames[i];
+			if (map.territories[name].capital)
+				if (start[name] === country)
+					return owner[name] === country;
+		}
 	}
 	
 }
