@@ -105,9 +105,18 @@ body {
 	font-size: 4vw;
 }
 
-#next {
-	color: inherit;
-	font-size: 4vw;
+#main > button {
 	font-family: inherit;
+	color: inherit;
+}
+
+#next {
+	font-size: 4vw;
 	font-weight: bold;
+}
+
+#reset {
+	font-size: 2vw;
+	width: 25%;
+	margin: 0 auto;
 }

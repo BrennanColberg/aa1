@@ -27,6 +27,7 @@
 		$("deposit").onclick = deposit;
 		$("checkout").onclick = checkout;
 		$("next").onclick = next;
+		$("reset").onclick = reset;
 		
 		// AJAX setup
 		if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
@@ -36,8 +37,8 @@
 		ajaxGET("resources/order.json", loadOrder);
 		if (cookieExists("current")) { loadCurrent(JSON.stringify(loadCookie("current"))); }
 		else { ajaxGET("save/current.json", loadCurrent); }
-		ajaxGET("resources/index.json", loadResources);
 		
+		ajaxGET("resources/index.json", loadResources);
 		ajaxGET("map/1942/units.json", loadUnits);
 		
 		// adds more event listeners (for saving, keys, etc)
@@ -281,6 +282,22 @@
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
 		sidebar[current].click();
  	}
+	
+	// resets all data to the default state
+	function reset() {
+		if (window.confirm("Are you sure? This will delete the current game.")) {
+			current = order[0];
+			$("sidebar").contentDocument.getElementById(current).click();
+			ajaxGET("save/timer.json", function(json) {
+				timer.load(json);
+				updateTimer();
+			});
+			ajaxGET("save/bank.json", function(json) {
+				bank.load(json);
+				updateBank();
+			});
+		}
+	}
 	
 	
 	/***** KEYBOARD SHORTCUTS *****/
