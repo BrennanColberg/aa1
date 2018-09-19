@@ -1,3 +1,7 @@
+:root {
+	--debug-display: none;
+}
+
 body {
 	margin: 0px;
 	display: flex;
@@ -132,4 +136,8 @@ main h1 {
 	font-size: 2vw;
 	width: 25%;
 	margin: 0 auto;
+}
+
+.debug {
+	display: var(--debug-display);
 }
