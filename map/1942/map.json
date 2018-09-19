@@ -1,4 +1,11 @@
 {
+	"alliances": {
+		"ussr": "allies",
+		"germany": "axis",
+		"britain": "allies",
+		"japan": "axis",
+		"usa": "allies"
+	},
 	"sea_zones": 64,
 	"territories": {
 

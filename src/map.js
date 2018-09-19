@@ -17,22 +17,26 @@ function Map() {
 		}
 		ajaxGET(mapSource, function(json) {
 			map = JSON.parse(json);
+			console.log(map);
 			update();
 		});
 	};
 	
 	// get a list of all territories a country can take over
 	this.conquerable = function(country) {
-		let result = [];
-		let territoryNames = Object.keys(territoryOwner);
-		for (let i = 0; i < territoryNames.length; i++) {
-			let territory = territoryNames[i];
-			if (territoryOwner[territory] != country) {
-				result.push(territory);
+		if (map) {
+			let result = [];
+			let territoryNames = Object.keys(territoryOwner);
+			for (let i = 0; i < territoryNames.length; i++) {
+				let territory = territoryNames[i];
+				if (map.alliances[territoryOwner[territory]] !==
+						map.alliances[country]) {
+					result.push(territory);
+				}
 			}
+			result.sort();
+			return result;
 		}
-		result.sort();
-		return result;
 	};
 	
 	this.conquer = function(country, territory, bank) {
