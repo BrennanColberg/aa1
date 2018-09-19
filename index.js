@@ -23,8 +23,8 @@
 	// ultimate starting loading function
 	window.addEventListener("load", function() {
 		
-		$("withdraw").onclick = withdraw;
-		$("deposit").onclick = deposit;
+		qs("#balance button").onclick = adjustBalance;
+		qs("#income button").onclick = adjustIncome;
 		$("checkout").onclick = checkout;
 		$("next").onclick = next;
 		$("reset").onclick = reset;
@@ -141,11 +141,11 @@
 	
 	/***** GRAPHICAL CHANGES & UPDATING *****/
 	
-	// displays the current time to the screen
+	// displays the current timer info to the screen
 	function updateTimer() {
 		$("currentTime").textContent = timer.displayString(timer.current());
 		$("overallTime").textContent = timer.displayString(timer.overall());
-	}
+  }
 	
 	// displays the current balances to the screen
 	function updateBank() {
@@ -157,8 +157,8 @@
 			balanceDOM.textContent = bank.balance(country);
 			incomeDOM.textContent = bank.income(country);
 		}
-		$("balance").textContent = bank.balance(current);
-		$("income").textContent = bank.income(current);
+		qs("#balance .display").textContent = bank.balance(current);
+		qs("#income .display").textContent = bank.income(current);
 	}
 	
 	// displays the current cart to the screen (contents and price)
@@ -209,31 +209,33 @@
 		if (timerDisplay) clearInterval(timerDisplay);
 		timerDisplay = setInterval(updateTimer, 1000);
 	}
-  
-	// displays the current timer info to the screen
-	function updateTimer() {
-		$("currentTime").textContent = timer.displayString(timer.current());
-		$("overallTime").textContent = timer.displayString(timer.overall());
-  }
 
 
   /***** BUTTON I/O (BANKING, ETC) ****/
 	
-	// withdraws from the current country's bank an amount of money
-	// can be called either by a button in the I/O or by a call with amount arg
-	function withdraw(amount) {
-		if (typeof amount !== "number")
-			amount = this.parentElement.querySelector("input").value;
-		bank.withdraw(current, amount);
+	// called by the "adjust" button in bank > balance ... tweaks the current
+	// country's balance by the amount in the input, then clears it
+	// (or, if called in code, just adjusts balance by argument)
+	function adjustBalance(amount) {
+		if (typeof amount !== "number") {
+			let input =  this.parentElement.querySelector("input");
+			amount = input.value;
+			input.value = "";
+		}
+		bank.adjustBalance(current, amount);
 		updateBank();
 	}
 	
-	// deposits to the current country's bank an amount of money
-	// can be called either by a button in the I/O or by a call with amount arg
-	function deposit(amount) {
-		if (typeof amount !== "number")
-			amount = this.parentElement.querySelector("input").value;
-		bank.deposit(current, amount);
+	// called by the "adjust" button in bank > income ... tweaks the current
+	// country's income by the amount in the input, then clears it
+	// (or, if called in code, just adjusts income by argument)
+	function adjustIncome(amount) {
+		if (typeof amount !== "number") {
+			let input =  this.parentElement.querySelector("input");
+			amount = input.value;
+			input.value = "";
+		}
+		bank.adjustIncome(current, amount);
 		updateBank();
 	}
 	
@@ -261,7 +263,7 @@
 		for (let i = unitCart.length - 1; i >= 0; i--) {
 			let unit = unitCart[i];
 			if (unit.cost <= bank.balance(current)) {
-				withdraw(unit.cost);
+				adjustBalance(-unit.cost);
 				unitCart.splice(i, 1);
 			}
 		}

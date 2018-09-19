@@ -40,18 +40,18 @@ function Bank() {
 		}
 	}
 	
-	// adds money to the given country's balance
-	this.deposit = function(country, amount) {
+	// adds money to or subtracts money from the country's current balance
+	this.adjustBalance = function(country, amount) {
 		this.balance(country, this.balance(country) + Number(amount));
 	}
 	
-	// subtracts money from the given country's balance
-	this.withdraw = function(country, amount) {
-		this.balance(country, this.balance(country) - Number(amount));
+	// adds money to or subtracts money from the country's turn-based income
+	this.adjustIncome = function(country, amount) {
+		this.income(country, this.income(country) + Number(amount));
 	}
 	
 	this.collectIncome = function(country) {
-		this.deposit(country, this.income(country));
+		this.adjustBalance(country, this.income(country));
 	}
 	
 }

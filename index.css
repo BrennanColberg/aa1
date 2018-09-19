@@ -8,6 +8,11 @@ body {
 	background-color: var(--current-color);
 }
 
+button, input {
+	font-family: inherit;
+	color: inherit;
+}
+
 #sidebar {
 	border: 0px;
 	height: 94vh;
@@ -19,7 +24,7 @@ body {
 	background-color: inherit;
 }
 
-#main {
+main {
 	width: 60%;
 	text-align: center;
 	display: flex;
@@ -29,20 +34,10 @@ body {
 	align-content: center;
 }
 
-#main > * {
+main > * {
 	background-color: white;
 	margin: 3vh;
 	border-radius: 3vw;
-}
-
-#bank-io * {
-	color: inherit;
-	display: inline-block;
-	font-size: 2vw;
-}
-#bank-io p {
-	font-size: 2.5vw;
-	font-weight: bold;
 }
 
 #units {
@@ -72,13 +67,27 @@ body {
 	cursor: pointer;
 }
 
-#cart button {
+div > button {
 	font-size: 2.5vw;
 	border-radius: 3vw; 
 	background-color: var(--current-color);
 	color: white;
 	border: none;
 	margin: 1vw;
+}
+
+input {
+	font-size: 2.5vw;
+	padding: 0.25vw;
+	text-align: center;
+}
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
 
 #cartContents {
@@ -100,14 +109,18 @@ body {
 	justify-content: space-around;
 }
 
-#main h1 {
-	margin: 1vh 2vw;
-	font-size: 4vw;
+#bank div {
+	margin: 1vw;
+	margin-bottom: 2vw;
 }
 
-#main > button {
-	font-family: inherit;
-	color: inherit;
+#bank input {
+	width: 40px;
+}
+
+main h1 {
+	margin: 1vh 2vw;
+	font-size: 4vw;
 }
 
 #next {
