@@ -15,6 +15,7 @@
 	let anthemPlayer = new AnthemPlayer();
 	let timer = new Timer();
 	let bank = new Bank();
+	let map = new Map();
 	let timerDisplay = undefined;
 	let sidebar = [];
 	let unitCart = [];
@@ -25,19 +26,26 @@
 		
 		qs("#balance button").onclick = adjustBalance;
 		qs("#income button").onclick = adjustIncome;
+		qs("#conquer button").onclick = conquer;
 		$("checkout").onclick = checkout;
 		$("next").onclick = next;
 		$("reset").onclick = reset;
 		
 		// AJAX setup
+		// timer
 		if (cookieExists("timer")) { timer.load(loadCookie("timer")); }
 		else { ajaxGET("save/timer.json", timer.load); }
+		// bank
 		if (cookieExists("bank")) { bank.load(loadCookie("bank")); }
 		else { ajaxGET("save/bank.json", bank.load); }
-		ajaxGET("resources/order.json", loadOrder);
+		// territory
+		if (cookieExists("territory")) { map.load(loadCookie("territory")); }
+		else { ajaxGET("map/1942/territory.json", function(json) { map.load(json, "map/1942/map.json", updateTerritory); }); }
+		// current
 		if (cookieExists("current")) { loadCurrent(JSON.stringify(loadCookie("current"))); }
 		else { ajaxGET("save/current.json", loadCurrent); }
 		
+		ajaxGET("resources/order.json", loadOrder);
 		ajaxGET("resources/index.json", loadResources);
 		ajaxGET("map/1942/units.json", loadUnits);
 		
@@ -161,6 +169,17 @@
 		qs("#income .display").textContent = bank.income(current);
 	}
 	
+	function updateTerritory() {
+		let dom = qs("#conquer select");
+		let array = map.conquerable(current);
+		while (dom.firstChild) dom.removeChild(dom.firstChild);
+		for (let i = 0; i < array.length; i++) {
+			let option = ce("option");
+			option.innerText = option.value = array[i];
+			dom.appendChild(option);
+		}
+	}
+	
 	// displays the current cart to the screen (contents and price)
 	function updateCart() {
 		let cart = $("cartContents");
@@ -192,22 +211,22 @@
 	}
 	// loads the current country's name, flag, and anthem
 	function start() {
-    // resets cart
-		unitCart = [];
-		updateCart();
-		// updates anthem to current country
+		// anthem
 		anthemPlayer.setFile(resources.anthem[current]);
 		anthemPlayer.start();
-		// updates the bank to show current country's info
-		updateBank();
-		// resets the timer and sets it to count for the current country
+		// timer
 		timer.setCountry(current);
 		timer.reset();
-		// displays the timer's value (and sets up another timer to regularly
-		// update said value)
 		updateTimer();
 		if (timerDisplay) clearInterval(timerDisplay);
 		timerDisplay = setInterval(updateTimer, 1000);
+		// bank
+		updateBank();
+		// territory
+		updateTerritory();
+		// units
+		unitCart = [];
+		updateCart();
 	}
 
 
@@ -237,6 +256,13 @@
 		}
 		bank.adjustIncome(current, amount);
 		updateBank();
+	}
+	
+	function conquer() {
+		let territory = this.parentElement.querySelector("select").value;
+		map.conquer(current, territory, bank);
+		updateBank();
+		updateTerritory();
 	}
 	
 	// called by a unit in the selection menu when clicked; adds a copy of it
@@ -280,7 +306,7 @@
 			while(num < min) num += r;
 			return num;
 		}
-		bank.collectIncome(current);
+		if (map.hasCapital(current)) bank.collectIncome(current, map);
 		current = order[wrap(order.indexOf(current) + 1, 0, order.length - 1)];
 		sidebar[current].click();
  	}

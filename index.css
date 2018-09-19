@@ -76,7 +76,7 @@ div > button {
 	margin: 1vw;
 }
 
-input {
+input, select {
 	font-size: 2.5vw;
 	padding: 0.25vw;
 	text-align: center;
