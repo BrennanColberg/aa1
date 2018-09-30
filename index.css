@@ -5,14 +5,15 @@
 body {
 	margin: 0px;
 	display: flex;
-	overflow: hidden;
 	--current-color: white;
 	color: var(--current-color);
 	border-color: var(--current-color);
 	background-color: var(--current-color);
+	overflow: scroll;
 }
 
-button, input {
+button,
+input {
 	font-family: inherit;
 	color: inherit;
 }
@@ -20,7 +21,6 @@ button, input {
 #sidebar {
 	border: 0px;
 	height: 94vh;
-	overflow: scroll;
 	width: 40%;
 	border: 3vh solid;
 	border-right: 0px;
@@ -73,21 +73,24 @@ main > * {
 
 div > button {
 	font-size: 2.5vw;
-	border-radius: 3vw; 
+	border-radius: 3vw;
 	background-color: var(--current-color);
 	color: white;
 	border: none;
 	margin: 1vw;
 }
 
-input, select {
+input,
+select {
 	font-size: 2.5vw;
 	padding: 0.25vw;
 	text-align: center;
 }
+
 input[type="number"] {
 	-moz-appearance: textfield;
 }
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
 	-webkit-appearance: none;
